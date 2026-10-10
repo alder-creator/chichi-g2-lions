@@ -1,0 +1,2 @@
+- Windows launcher fix: the Words to Know generator now uses `py -3` instead of `python`.
+- No app logic or audio assets changed from v0.50.

@@ -507,17 +507,26 @@ function browserSpeak(text){
     speechSynthesis.speak(u);
   }catch(e){}
 }
-function vocabRyanPath(text){
+function ryanWordPath(text){
   if(currentWeek!==1 && currentWeek!==2 && currentWeek!==3) return null;
-  const idx=WEEKS[currentWeek].vocab.findIndex(v=>v[0]===text);
-  if(idx<0) return null;
-  return `assets/audio/vocab/week${currentWeek}/word_${String(idx+1).padStart(2,'0')}.mp3`;
+
+  const vocabIdx=WEEKS[currentWeek].vocab.findIndex(v=>v[0]===text);
+  if(vocabIdx>=0){
+    return `assets/audio/vocab/week${currentWeek}/word_${String(vocabIdx+1).padStart(2,'0')}.mp3`;
+  }
+
+  const hfwIdx=WEEKS[currentWeek].hfw.findIndex(w=>w===text);
+  if(hfwIdx>=0){
+    return `assets/audio/hfw/week${currentWeek}/word_${String(hfwIdx+1).padStart(2,'0')}.mp3`;
+  }
+
+  return null;
 }
 function speak(text){
   try{
     speechSynthesis.cancel();
     if(vocabAudio){vocabAudio.pause();vocabAudio.currentTime=0;vocabAudio=null;}
-    const src=vocabRyanPath(text);
+    const src=ryanWordPath(text);
     if(!src){browserSpeak(text);return;}
     const a=new Audio(src);vocabAudio=a;
     const fallback=()=>{if(vocabAudio===a)vocabAudio=null;browserSpeak(text);};

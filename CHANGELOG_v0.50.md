@@ -1,0 +1,5 @@
+- Fixed Words to Know audio routing for Weeks 1-3.
+- Ryan playback now checks both the main vocabulary list and the five Words to Know / HFW words for the current week.
+- Listen & Tap also uses the baked Ryan HFW clips whenever it selects a Words to Know item.
+- Added GENERATE_RYAN_WORDS_TO_KNOW.bat and tools/generate_ryan_words_to_know.py for the 15 missing Ryan clips.
+- Existing 97 baked Ryan MP3s preserved; running the new generator adds 15, bringing the total to 112.
