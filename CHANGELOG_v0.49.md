@@ -1,0 +1,5 @@
+- Removed redundant descriptor/instruction lines from Picture Match, Meaning Match, and Memory Match.
+- Redesigned the Week hub desktop header into three aligned zones: Chichi's English Town logo left, narrower week-information box centre, Week image right.
+- Top-aligned the logo, information box, and Week image to use the top area more efficiently.
+- Preserved tablet/mobile responsive stacking and all v0.48 daily-completion/question-bank behavior.
+- Preserved the homepage, G1-style wheel, Wheel SFX, Adventures, and all 97 baked Ryan MP3s.

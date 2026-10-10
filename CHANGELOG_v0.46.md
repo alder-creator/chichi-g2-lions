@@ -1,0 +1,3 @@
+- Fixed Chichi's Adventure header clipping introduced by the old negative margin.
+- Chichi's Adventure now uses the same proper top-row layout as the other activities: logo + Week button + centred activity title.
+- Preserved v0.45 Wheel Spin fixes/SFX and all 97 baked Ryan MP3s.

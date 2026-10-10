@@ -1,0 +1,4 @@
+- Corrected the v0.39 Picture Match sizing change.
+- Word column is now genuinely smaller: fixed at 275px on desktop.
+- Picture area takes all remaining width up to a 1280px board, making each of the three picture cards noticeably larger.
+- Removed the v0.39 minimum-height behaviour that was making the picture containers look smaller/narrower than intended.

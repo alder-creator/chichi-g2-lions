@@ -1,0 +1,3 @@
+- Changed the Chichi's English Town logo from fixed to page-positioned so it scrolls away with the page.
+- Changed the activity Week/back button from fixed to page-positioned so it scrolls away too.
+- The controls remain in the same top area when the activity first opens, but no longer cover content while scrolling.

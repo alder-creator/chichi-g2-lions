@@ -1,0 +1,3 @@
+- Narrowed the Picture Match word column and widened the picture column.
+- Picture Match now shows 3 images per row on desktop-sized screens.
+- Mobile breakpoint still falls back to 2 images per row for comfortable tapping.

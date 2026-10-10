@@ -1,0 +1,3 @@
+- Moved every activity title into the same top row as the Chichi's English Town logo and Week button.
+- Reclaimed the previously unused blank top space so activity panels begin higher on the page.
+- Top controls still scroll away with the page rather than floating over activity content.

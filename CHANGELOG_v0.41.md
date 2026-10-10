@@ -1,0 +1,5 @@
+- Rebuilt Wheel Spin UI from scratch.
+- Replaced the rough CSS conic wheel with a clean 15-segment SVG wheel.
+- Added alternating red/cream segments, gold segments 5/10/15, green completed segments, strong borders, and a proper pointer/hub.
+- Reworked the wheel status, legend, spin button, and question card for cleaner spacing and easier classroom use.
+- Kept the existing 15-question/progress logic intact.

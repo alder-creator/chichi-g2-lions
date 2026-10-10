@@ -1,0 +1,4 @@
+- Base: user's Ryan-enabled v0.41 Wheel Rebuild.
+- Preserved all 69 existing baked Ryan MP3s (20 Adventures + 49 Week 2/3 vocabulary).
+- Extended baked vocabulary playback to Week 1.
+- Added GENERATE_RYAN_VOCAB_WEEK1.bat for the 28 Week 1 vocabulary words.

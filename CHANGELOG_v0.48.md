@@ -1,0 +1,7 @@
+- Fixed Chichi's English Town logo / Week button overlap on activity pages.
+- Reworked completion tracking: standard activities now show a check only when completed today; the last completion date is retained and shown afterwards. Completion history is stored locally by date.
+- Wheel mastery remains persistent and records its mastery date.
+- Words to Know, Phonics, and Grammar now use 50-question banks with 10 random questions per daily attempt.
+- Added short-height desktop layout rules so the Week hub is substantially more likely to fit on school-computer screens without hiding activity tiles.
+- Preserved tablet/mobile responsive behavior: 2-column tablet grid and 1-column mobile grid with normal scrolling.
+- Preserved homepage, G1-style wheel, Wheel SFX, Adventures, and all 97 Ryan MP3s.

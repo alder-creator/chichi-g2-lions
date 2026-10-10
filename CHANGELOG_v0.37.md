@@ -1,0 +1,4 @@
+- Fixed Windows narration generator so it tries `py -3` before the broken Microsoft Store `python` alias.
+- Removed pydub/audioop dependency entirely; generator is safe for Python 3.13.
+- Uses FFmpeg/imageio-ffmpeg for the anti-click fade/silence cleanup.
+- Keeps Ryan en-GB voice at -10% and generates all 20 Week 1-3 Adventure page MP3s into the app automatically.

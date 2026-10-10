@@ -1,0 +1,4 @@
+- Added baked en-GB-RyanNeural vocabulary audio support for Week 2 and Week 3.
+- Vocabulary cards, Listen & Tap vocabulary items, Picture/Meaning/Memory Match vocabulary playback now use Ryan when the generated MP3 exists.
+- Added GENERATE_RYAN_VOCAB_W2_W3.bat to create all 49 Week 2-3 vocabulary MP3s.
+- Browser speech remains only as a fallback if a baked MP3 is missing.

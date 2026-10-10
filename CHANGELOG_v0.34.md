@@ -1,0 +1,3 @@
+- Reduced Picture Match word boxes by about 10% in width.
+- Expanded the picture grid area so all three images per row are larger.
+- Kept the existing 3-column desktop layout and mobile 2-column fallback.

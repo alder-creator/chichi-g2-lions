@@ -1,0 +1,2 @@
+- Picture Match tuning: reduced the word column by about 10% and enlarged the picture column/cards by about 10%.
+- Increased picture grid spacing slightly so larger image tiles still breathe properly.

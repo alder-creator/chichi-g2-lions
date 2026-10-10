@@ -1,0 +1,6 @@
+- Rebuilt from the working v0.43 wheel after v0.44 accidentally removed wheel functions.
+- Added spin/correct/wrong/gold SFX without altering the wheel page structure.
+- Fixed the green SPIN button transparency during spinning.
+- Removed the outer black Wheel Spin frame/shadow.
+- Enlarged the wheel area and wheel on desktop.
+- Preserved all 97 baked Ryan MP3s.

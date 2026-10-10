@@ -1,0 +1,3 @@
+- Replaced the homepage artwork with the new supplied Chichi's English Town village image.
+- Preserved the existing homepage interactions: Chichi opens Choose a Week, robin plays birdsong, bell rings.
+- Preserved all v0.46 fixes, G1-style wheel, SFX, and all 97 baked Ryan MP3s.

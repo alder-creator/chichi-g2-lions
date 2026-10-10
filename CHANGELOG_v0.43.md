@@ -1,0 +1,4 @@
+- Replaced the G2 Wheel Spin with the G1 Tigers three-wheel system and visual design.
+- Added Phonics, Words, Reading wheels with 15 segments each, gold challenge segments, hearts, sequential unlocking, and Wheel+.
+- Added completely new G2 question banks for Weeks 1-3: 30 Phonics + 30 Words + 30 Reading questions per week (270 total); Wheel+ uses the second 15 questions in each bank so it does not repeat the normal wheel.
+- Preserved the audio-complete v0.42 base and all 97 baked Ryan MP3s.
