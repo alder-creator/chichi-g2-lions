@@ -433,11 +433,11 @@ const WEEKS = {
 const ICONS = {vocab:'🗂️',listen:'🔊',match:'🧩',phonics:'🔤',sight:'👀',grammar:'✏️',read:'📖',order:'🔢',adventure:'🐉',check:'✅',exam:'📝',wheel:'🎡'};
 const ACTIVITY_META = {
   vocab:['Vocabulary','Review the week’s key words.'],
+  sight:['Words to Know','Use the high-frequency words in context.'],
+  phonics:['Phonics','Practise this week’s sound and spelling patterns.'],
+  grammar:['Grammar','Practise the week’s language skill.'],
   listen:['Listen & Tap','Listen carefully and choose the word.'],
   match:['Match','Match words to their meanings.'],
-  phonics:['Phonics','Practise this week’s sound and spelling patterns.'],
-  sight:['Words to Know','Use the high-frequency words in context.'],
-  grammar:['Grammar','Practise the week’s language skill.'],
   read:['Read & Find','Read an original practice text and find evidence.'],
   order:['Put in Order','Sequence key events from the practice text.'],
   adventure:["Chichi’s Adventure",'Read a short original story with Chichi.'],
@@ -445,6 +445,7 @@ const ACTIVITY_META = {
   exam:['Exam Practice','20 mixed questions across the week’s word and language skills.'],
   wheel:['Wheel Spin','Spin through a 15-part mixed review.']
 };
+const ACTIVITY_ORDER=['vocab','sight','phonics','grammar','listen','match','read','order','adventure','check','exam','wheel'];
 
 let currentWeek = 1;
 let currentActivity = null;
@@ -460,6 +461,7 @@ function weekBadge(w){ return `assets/week_badges/week${w}.png`; }
 function completeKey(w,a){ return `chichi_g2_u4_w${w}_${a}_done`; }
 function completionDateKey(w,a){ return `${completeKey(w,a)}_date`; }
 function completionHistoryKey(w,a){ return `${completeKey(w,a)}_history`; }
+function completionCountKey(w,a){ return `${completeKey(w,a)}_count`; }
 function localDateStamp(d=new Date()){
   const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
@@ -471,21 +473,26 @@ function prettyCompletionDate(s){
   return new Date(y,m-1,d).toLocaleDateString(undefined,{month:'short',day:'numeric'});
 }
 function lastCompletionDate(w,a){ return localStorage.getItem(completionDateKey(w,a))||''; }
-function isDone(w,a){
-  if(a==='wheel') return localStorage.getItem(completeKey(w,a))==='1';
-  return lastCompletionDate(w,a)===localDateStamp();
+function completionCount(w,a){
+  const saved=Number(localStorage.getItem(completionCountKey(w,a)));
+  if(Number.isFinite(saved) && saved>=0 && localStorage.getItem(completionCountKey(w,a))!==null)return saved;
+  try{
+    const hist=JSON.parse(localStorage.getItem(completionHistoryKey(w,a))||'[]');
+    if(Array.isArray(hist)&&hist.length)return hist.length;
+  }catch(e){}
+  return localStorage.getItem(completeKey(w,a))==='1'?1:0;
 }
+function isDone(w,a){ return lastCompletionDate(w,a)===localDateStamp(); }
 function completionLabel(w,a){
   const last=lastCompletionDate(w,a);
-  if(a==='wheel' && localStorage.getItem(completeKey(w,a))==='1')
-    return last?`✓ Mastered ${prettyCompletionDate(last)}`:'✓ Mastered';
   if(last===localDateStamp())return '✓ Complete today';
   return last?`Last: ${prettyCompletionDate(last)}`:'';
 }
 function markDone(w,a){
-  const today=localDateStamp();
+  const today=localDateStamp(),nextCount=completionCount(w,a)+1;
   localStorage.setItem(completeKey(w,a),'1');
   localStorage.setItem(completionDateKey(w,a),today);
+  localStorage.setItem(completionCountKey(w,a),String(nextCount));
   try{
     const key=completionHistoryKey(w,a);
     const hist=JSON.parse(localStorage.getItem(key)||'[]');
@@ -493,6 +500,7 @@ function markDone(w,a){
   }catch(e){}
   toast(a==='wheel'?'Wheel mastered!':'Activity complete for today!');
 }
+function passTarget(total){ return Math.ceil(total*0.8); }
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),1500); }
 
 let vocabAudio=null;
@@ -549,17 +557,27 @@ function plainAdventureText(html){
 function adventureNarrationPath(week,pageIndex){
   return `assets/audio/adventure/week${week}/page_${String(pageIndex+1).padStart(2,'0')}.mp3`;
 }
-function playAdventureNarration(week,pageIndex,html,button){
+function playAdventureNarration(week,pageIndex,html,button,onComplete){
   stopAdventureNarration();
   const src=adventureNarrationPath(week,pageIndex);
   const a=new Audio(src); adventureAudio=a;
+  let fallbackStarted=false;
   if(button){button.textContent='■ Stop';button.classList.add('playing');}
-  const reset=()=>{ if(button){button.textContent='🔊 Listen';button.classList.remove('playing');} if(adventureAudio===a) adventureAudio=null; };
-  a.onended=reset;
+  const reset=()=>{ if(button){button.textContent='🔊 Listen to page';button.classList.remove('playing');} if(adventureAudio===a) adventureAudio=null; };
+  const complete=()=>{reset();if(typeof onComplete==='function')onComplete();};
+  a.onended=complete;
   a.onerror=()=>{
-    reset();
-    // Fallback keeps narration usable before baked Ryan files are generated.
-    speak(plainAdventureText(html));
+    if(fallbackStarted)return;fallbackStarted=true;reset();
+    try{
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(plainAdventureText(html));
+      u.lang='en-GB';u.rate=.86;u.pitch=1.02;
+      const voices=speechSynthesis.getVoices();
+      const preferred=voices.find(v=>/en-GB/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang));
+      if(preferred)u.voice=preferred;
+      u.onend=()=>{if(typeof onComplete==='function')onComplete();};
+      speechSynthesis.speak(u);
+    }catch(e){}
   };
   a.play().catch(()=>{a.onerror&&a.onerror();});
 }
@@ -603,9 +621,10 @@ function renderWeeks(){
 
 function renderHub(){
   const w=WEEKS[currentWeek];const host=$('#hubContent');
-  const tiles=Object.keys(ACTIVITY_META).map(id=>{
+  const tiles=ACTIVITY_ORDER.map(id=>{
     const [name,desc]=ACTIVITY_META[id];
-    return `<button class="activityTile" data-activity="${id}" type="button"><span class="icon" aria-hidden="true">${ICONS[id]}</span><span><b>${name}</b><small>${desc}</small><span class="progressTick">${completionLabel(currentWeek,id)}</span></span></button>`;
+    const done=isDone(currentWeek,id),count=completionCount(currentWeek,id);
+    return `<button class="activityTile ${done?'doneToday':''}" data-activity="${id}" type="button"><span class="icon" aria-hidden="true">${ICONS[id]}</span><span><b>${name}</b><small>${desc}</small><span class="progressTick">${completionLabel(currentWeek,id)}</span></span><span class="completionCount" aria-label="${count} lifetime completions">× ${count}</span></button>`;
   }).join('');
   host.innerHTML=`
     <div class="hubHero">
@@ -658,9 +677,9 @@ function renderListen(){
 }
 function drawListen(){
   const s=listenState,host=$('#listenInner');
-  if(s.i>=s.queue.length){markDone(currentWeek,'listen');host.innerHTML=finishMarkup('Listening complete!',s.score,s.queue.length,'listen');wireFinishButtons();return;}
+  if(s.i>=s.queue.length){const passed=s.score>=passTarget(s.queue.length);if(passed)markDone(currentWeek,'listen');host.innerHTML=finishMarkup(passed?'Listening complete!':'Listening finished',s.score,s.queue.length,'listen',passed);wireFinishButtons();return;}
   const q=s.queue[s.i];
-  host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*s.i/s.queue.length}%"></div></div><p class="instruction">${s.i+1} / ${s.queue.length}</p><div class="promptBig">Which word do you hear?</div><div class="centerActions"><button id="replayWord" class="secondaryBtn" type="button">🔊 Play word</button></div><div class="answerGrid">${q.choices.map(x=>`<button class="answerBtn" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="listenFeedback" class="feedback"></div><div class="centerActions"><button id="listenNext" class="nextBtn" type="button" hidden>${s.i===s.queue.length-1?'Finish':'Next'} ›</button></div>`;
+  host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*s.i/s.queue.length}%"></div></div><p class="instruction">${s.i+1} / ${s.queue.length}${s.queue.length===10?' · Pass: 8/10':''}</p><div class="promptBig">Which word do you hear?</div><div class="centerActions"><button id="replayWord" class="secondaryBtn" type="button">🔊 Play word</button></div><div class="answerGrid">${q.choices.map(x=>`<button class="answerBtn" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="listenFeedback" class="feedback"></div><div class="centerActions"><button id="listenNext" class="nextBtn" type="button" hidden>${s.i===s.queue.length-1?'Finish':'Next'} ›</button></div>`;
   $('#replayWord').onclick=()=>speak(q.answer);setTimeout(()=>speak(q.answer),180);
   $$('.answerBtn',host).forEach(b=>b.onclick=()=>{
     if(s.answered)return;s.answered=true;const ok=b.dataset.answer===q.answer;if(ok)s.score++;
@@ -995,7 +1014,7 @@ function startMC(title,subtitle,questions,key){
 }
 function drawMC(){
   const s=mcState,host=$('#mcInner');
-  if(s.i>=s.queue.length){markDone(currentWeek,s.key);host.innerHTML=finishMarkup(`${s.title} complete!`,s.score,s.queue.length,s.key);wireFinishButtons();return;}
+  if(s.i>=s.queue.length){const passed=s.score>=passTarget(s.queue.length);if(passed)markDone(currentWeek,s.key);host.innerHTML=finishMarkup(passed?`${s.title} complete!`:`${s.title} finished`,s.score,s.queue.length,s.key,passed);wireFinishButtons();return;}
   const q=s.queue[s.i];const choices=shuffle(q.choices);
   host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*s.i/s.queue.length}%"></div></div><p class="instruction">${s.i+1} / ${s.queue.length}</p><div class="promptBig">${q.q}</div><div class="answerGrid">${choices.map(x=>`<button class="answerBtn" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="mcFeedback" class="feedback"></div><div class="centerActions"><button id="mcNext" class="nextBtn" type="button" hidden>${s.i===s.queue.length-1?'Finish':'Next'} ›</button></div>`;
   $$('.answerBtn',host).forEach(b=>b.onclick=()=>{
@@ -1012,7 +1031,7 @@ function renderRead(){
 }
 function drawReadQuestion(){
   const p=WEEKS[currentWeek].passage,s=readState,host=$('#readQuestions');
-  if(s.i>=p.questions.length){markDone(currentWeek,'read');host.innerHTML=finishMarkup('Reading complete!',s.score,p.questions.length,'read');wireFinishButtons();return;}
+  if(s.i>=p.questions.length){const passed=s.score>=passTarget(p.questions.length);if(passed)markDone(currentWeek,'read');host.innerHTML=finishMarkup(passed?'Reading complete!':'Reading finished',s.score,p.questions.length,'read',passed);wireFinishButtons();return;}
   const q=p.questions[s.i];
   host.innerHTML=`<div class="questionCard"><div class="eyebrow">Question ${s.i+1} of ${p.questions.length}</div><h3>${q.q}</h3><div class="miniChoices">${shuffle(q.choices).map(x=>`<button class="miniChoice" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="readFeedback" class="feedback"></div><div class="centerActions"><button id="readNext" class="nextBtn" type="button" hidden>${s.i===p.questions.length-1?'Finish':'Next'} ›</button></div></div>`;
   $$('.miniChoice',host).forEach(b=>b.onclick=()=>{
@@ -1106,7 +1125,7 @@ const ADVENTURES={
 function renderOrder(){
   const correct=ORDER_TASKS[currentWeek];
   const items=shuffle(correct.map((text,i)=>({text,i})));
-  let chosen=[];
+  let chosen=[],counted=false;
   $('#activityContent').innerHTML=activityShell('Put in Order','Put the four events in the order they happen.',`<p class="instruction">Tap the events from first to last.</p><div id="orderSource" class="answerGrid"></div><div class="promptBig" style="font-size:28px;margin-top:24px">Your order</div><div id="orderChosen" class="matchCol" style="max-width:850px;margin:0 auto"></div><div id="orderFeedback" class="feedback"></div><div class="centerActions"><button id="orderReset" class="secondaryBtn" type="button">Reset</button><button id="orderCheck" class="primaryBtn" type="button">Check order</button></div>`);
   wireBack();
   const source=$('#orderSource'),out=$('#orderChosen');
@@ -1123,43 +1142,92 @@ function renderOrder(){
     if(chosen.length<4){f.textContent='Choose all four events first.';f.className='feedback bad';return;}
     const ok=chosen.every((x,i)=>x.i===i);
     f.textContent=ok?'Correct — the sequence makes sense.':'Not quite. Tap an item in your order to move it back, then try again.';f.className='feedback '+(ok?'good':'bad');
-    if(ok){markDone(currentWeek,'order');}
+    if(ok&&!counted){counted=true;markDone(currentWeek,'order');}
   };
 }
 
+const ADVENTURE_RC={
+  1:[
+    {q:'What does Chichi find behind the loose brick?',choices:['a small metal box','a bag of gold','a new sketchbook'],answer:'a small metal box'},
+    {q:'What does the note inside the box say?',choices:['For the next artist.','Do not open this box.','Take these pencils home.'],answer:'For the next artist.'}
+  ],
+  2:[
+    {q:'Who is player number seven in the old team photograph?',choices:['Chichi’s coach','Chichi','the town mayor'],answer:'Chichi’s coach'},
+    {q:'Why did the old team make a league of their own?',choices:['They were not allowed to join the town league.','They wanted a bigger silver cup.','Their football was lost.'],answer:'They were not allowed to join the town league.'}
+  ],
+  3:[
+    {q:'What do Chichi and the boy use to move the heavy box?',choices:['an old wooden cart','a 3D printer','a horse'],answer:'an old wooden cart'},
+    {q:'What is written on the back of the ticket?',choices:['THANK YOU FOR THE CART.','THE TRAIN LEAVES NOW.','WELCOME TO THE MUSEUM.'],answer:'THANK YOU FOR THE CART.'}
+  ],
+  4:[
+    {q:'Why does Chichi compare several museum objects?',choices:['Each object shows only part of the past.','He wants to choose the prettiest object.','The map is broken.'],answer:'Each object shows only part of the past.'},
+    {q:'What symbol on the flag matches the old map?',choices:['a river','a train','a star'],answer:'a river'}
+  ],
+  5:[
+    {q:'Where does Chichi get extra markers?',choices:['the school office','the supermarket','the library'],answer:'the school office'},
+    {q:'What does Chichi learn about helping?',choices:['Notice what is needed and act.','Only famous actions are helpful.','One person should do every job.'],answer:'Notice what is needed and act.'}
+  ],
+  6:[
+    {q:'Which item does Chichi put in the time capsule?',choices:['a class photo','a gold coin','a football'],answer:'a class photo'},
+    {q:'Why does Chichi label the items?',choices:['So future students know why they mattered.','So he can sell them later.','So the box looks colorful.'],answer:'So future students know why they mattered.'}
+  ]
+};
+
 function renderAdventure(){
   const story=ADVENTURES[currentWeek]||{pages:[]};
-  const pages=story.pages||[];
-  let i=-1; // -1 = opening page
+  const pages=story.pages||[],questions=ADVENTURE_RC[currentWeek]||[];
+  let i=-1,rcIndex=0,counted=false; // -1 = opening page
+  const listenedPages=new Set();
   $('#activityContent').innerHTML=activityShell('Chichi’s Adventure','',`<div id="adventureInner"></div>`);
   $('#activityContent .activityHeader')?.classList.add('adventureHeader');
   $('#activityContent .activityPanel')?.classList.add('adventurePanel');
   wireBack();
+  function showComplete(){
+    if(!counted){counted=true;markDone(currentWeek,'adventure');}
+    const host=$('#adventureInner'),completeImg=story.completeImage||pages.at(-1)?.image||weekArt(currentWeek);
+    host.innerHTML=`<div class="adventurePage adventureFinish"><div class="adventureImageWrap"><img class="adventureImage" src="${completeImg}" alt="Story complete"></div><div class="questionCard adventureTextCard adventureFinishCard"><div class="big">Story complete!</div><div class="scoreBig adventureRcScore">2 / 2</div><p>Great reading — both questions are correct.</p><div class="centerActions adventureNav"><button id="adventureAgain" class="secondaryBtn" type="button">Read again</button><button id="adventureWeek" class="primaryBtn" type="button">Back to ${WEEKS[currentWeek].title}</button></div></div></div>`;
+    $('#adventureAgain').onclick=()=>{stopAdventureNarration();i=-1;rcIndex=0;counted=false;listenedPages.clear();draw();};
+    $('#adventureWeek').onclick=()=>{stopAdventureNarration();route(`#hub/${currentWeek}`)};
+  }
+  function drawQuestion(){
+    stopAdventureNarration();
+    const host=$('#adventureInner');
+    if(rcIndex>=questions.length){showComplete();return;}
+    const q=questions[rcIndex];
+    host.innerHTML=`<div class="adventureRc"><div class="eyebrow">Reading Check · Question ${rcIndex+1} of ${questions.length}</div><div class="promptBig adventureRcPrompt">${q.q}</div><div class="answerGrid">${shuffle(q.choices).map(x=>`<button class="answerBtn adventureRcAnswer" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="adventureRcFeedback" class="feedback"></div><div class="centerActions"><button id="adventureRcNext" class="nextBtn" type="button" hidden>${rcIndex===questions.length-1?'Complete Adventure':'Next question'} ›</button></div></div>`;
+    $$('.adventureRcAnswer',host).forEach(b=>b.onclick=()=>{
+      const ok=b.dataset.answer===q.answer;
+      $$('.adventureRcAnswer',host).forEach(x=>x.classList.remove('wrong'));
+      const f=$('#adventureRcFeedback');
+      if(!ok){b.classList.add('wrong');f.textContent='Not quite — try again.';f.className='feedback bad';return;}
+      $$('.adventureRcAnswer',host).forEach(x=>{x.disabled=true;if(x.dataset.answer===q.answer)x.classList.add('correct');});
+      f.textContent='Correct!';f.className='feedback good';$('#adventureRcNext').hidden=false;
+    });
+    $('#adventureRcNext').onclick=()=>{rcIndex++;drawQuestion();};
+  }
   function draw(){
     const host=$('#adventureInner');
     if(i<0){
       const cover=story.coverImage||pages[0]?.image||weekArt(currentWeek);
       const storyTitle=story.title||pages[0]?.title||'Chichi’s Adventure';
-      host.innerHTML=`<div class="adventureIntro"><div class="adventureIntroImage"><img src="${cover}" alt="${escapeAttr(storyTitle)}"></div><div class="adventureIntroCard"><div class="eyebrow">${WEEKS[currentWeek].title} · Chichi’s Adventure</div><h2>${storyTitle}</h2><p>Ready for a new adventure with Chichi?</p><div class="centerActions"><button id="adventureStart" class="nextBtn adventureStartBtn" type="button">Start Story ›</button></div></div></div>`;
+      host.innerHTML=`<div class="adventureIntro"><div class="adventureIntroImage"><img src="${cover}" alt="${escapeAttr(storyTitle)}"></div><div class="adventureIntroCard"><div class="eyebrow">${WEEKS[currentWeek].title} · Chichi’s Adventure</div><h2>${storyTitle}</h2><p>Listen to every page, then answer two reading questions.</p><div class="centerActions"><button id="adventureStart" class="nextBtn adventureStartBtn" type="button">Start Story ›</button></div></div></div>`;
       $('#adventureStart').onclick=()=>{stopAdventureNarration();i=0;draw()};
       return;
     }
-    if(i>=pages.length){
-      markDone(currentWeek,'adventure');
-      const completeImg=story.completeImage||pages.at(-1)?.image||weekArt(currentWeek);
-      host.innerHTML=`<div class="adventurePage adventureFinish"><div class="adventureImageWrap"><img class="adventureImage" src="${completeImg}" alt="Story complete"></div><div class="questionCard adventureTextCard adventureFinishCard"><div class="big">Story complete!</div><p>Chichi finished this week’s adventure.</p><div class="centerActions adventureNav"><button id="adventureAgain" class="secondaryBtn" type="button">Read again</button><button id="adventureWeek" class="primaryBtn" type="button">Back to ${WEEKS[currentWeek].title}</button></div></div></div>`;
-      $('#adventureAgain').onclick=()=>{stopAdventureNarration();i=-1;draw()};$('#adventureWeek').onclick=()=>{stopAdventureNarration();route(`#hub/${currentWeek}`)};return;
-    }
-    const page=pages[i], title=page.title, text=page.text;
-    const image=page.image||weekArt(currentWeek);
-    host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*(i+1)/pages.length}%"></div></div><div class="adventurePage"><div class="adventureImageWrap"><img class="adventureImage" src="${image}" alt="${escapeAttr(title)}"></div><div class="questionCard adventureTextCard"><div class="eyebrow">Page ${i+1} of ${pages.length}</div><h2>${title}</h2><p>${text}</p><div class="adventureListenRow"><button id="advListen" class="secondaryBtn adventureListenBtn" type="button">🔊 Listen</button></div><div class="centerActions adventureNav"><button id="advPrev" class="secondaryBtn" type="button">‹ Back</button><button id="advNext" class="nextBtn" type="button">${i===pages.length-1?'Finish':'Next'} ›</button></div></div></div>`;
+    if(i>=pages.length){drawQuestion();return;}
+    const page=pages[i],title=page.title,text=page.text,image=page.image||weekArt(currentWeek),alreadyListened=listenedPages.has(i);
+    host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*(i+1)/pages.length}%"></div></div><div class="adventurePage"><div class="adventureImageWrap"><img class="adventureImage" src="${image}" alt="${escapeAttr(title)}"></div><div class="questionCard adventureTextCard"><div class="eyebrow">Page ${i+1} of ${pages.length}</div><h2>${title}</h2><p>${text}</p><div class="adventureListenHint">${alreadyListened?'✓ Narration complete':'Listen to the whole page to unlock Next.'}</div><div class="adventureListenRow"><button id="advListen" class="secondaryBtn adventureListenBtn" type="button">${alreadyListened?'↻ Listen again':'🔊 Listen to page'}</button></div><div class="centerActions adventureNav"><button id="advPrev" class="secondaryBtn" type="button">‹ Back</button><button id="advNext" class="nextBtn" type="button" ${alreadyListened?'':'disabled'}>${i===pages.length-1?'Reading Questions':'Next Page'} ›</button></div></div></div>`;
     $('#advListen').onclick=(e)=>{
       const b=e.currentTarget;
-      if(b.classList.contains('playing')){stopAdventureNarration();b.textContent='🔊 Listen';b.classList.remove('playing');}
-      else playAdventureNarration(currentWeek,i,text,b);
+      if(b.classList.contains('playing')){stopAdventureNarration();b.textContent=listenedPages.has(i)?'↻ Listen again':'🔊 Listen to page';b.classList.remove('playing');return;}
+      playAdventureNarration(currentWeek,i,text,b,()=>{
+        listenedPages.add(i);
+        const next=$('#advNext'),hint=$('.adventureListenHint'),listen=$('#advListen');
+        if(next)next.disabled=false;if(hint)hint.textContent='✓ Narration complete';if(listen)listen.textContent='↻ Listen again';
+      });
     };
-    $('#advPrev').onclick=()=>{stopAdventureNarration();i--;draw()};
-    $('#advNext').onclick=()=>{stopAdventureNarration();i++;draw()};
+    $('#advPrev').onclick=()=>{stopAdventureNarration();i=Math.max(-1,i-1);draw()};
+    $('#advNext').onclick=()=>{if(!listenedPages.has(i))return;stopAdventureNarration();i++;draw()};
   }
   draw();
 }
@@ -1318,8 +1386,9 @@ function answerG2Wheel(btn){if(!g2WheelQuestion)return;const st=loadG2Wheel(),q=
 function renderG2WheelMilestone(){const st=loadG2Wheel(),host=$('#g1WheelQuestionPanel');if(g2WheelPlus){const all=G2_WHEEL_LEVELS.every(l=>st.plus[l.id].length===15);host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>${all?'Wheel+ Master!':`${G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short} Master!`}</h2><p>${all?'Every segment on all three wheels is green!':'All 15 segments are green!'}</p>${all?'<button id="g1WheelBackWeek" type="button">Back to Week</button>':''}</div>`;if(all)$('#g1WheelBackWeek').onclick=()=>route(`#hub/${currentWeek}`);return;}host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>Wheel Master!</h2><p>Phonics, Words, and Reading are complete. Wheel+ is unlocked!</p><button id="g1WheelStartPlus" type="button">Start Wheel+</button></div>`;$('#g1WheelStartPlus').onclick=()=>{g2WheelPlus=true;g2WheelLevel='starter';st.hearts=4;st.gameOver=false;saveG2Wheel(st);renderWheel();};}
 function resetWheel(){if(!confirm(`Reset ${WEEKS[currentWeek].title} wheel progress?`))return;localStorage.removeItem(wheelStorageKey(currentWeek));localStorage.removeItem(completeKey(currentWeek,'wheel'));g2WheelPlus=false;g2WheelLevel='starter';g2WheelQuestion=null;g2WheelRotation=0;renderWheel();}
 
-function finishMarkup(title,score,total,key){
-  const pct=Math.round(score/total*100);return `<div class="finishBox"><div class="big">${title}</div><div class="scoreBig">${score} / ${total}</div><p>${pct>=90?'Excellent work.':pct>=70?'Good work — review anything you missed.':'Have another go after a quick review.'}</p><div class="centerActions"><button id="finishAgain" class="secondaryBtn" type="button">Again</button><button id="finishWeek" class="primaryBtn" type="button">Back to ${WEEKS[currentWeek].title}</button></div></div>`;
+function finishMarkup(title,score,total,key,passed=score>=passTarget(total)){
+  const target=passTarget(total),pct=Math.round(score/total*100);
+  return `<div class="finishBox ${passed?'passed':'notPassed'}"><div class="big">${title}</div><div class="scoreBig">${score} / ${total}</div><div class="thresholdLine">Pass mark: ${target} / ${total}${total===10?' (8/10 required)':''}</div><div class="resultStatus">${passed?'✓ Successful completion':'Not completed yet'}</div><p>${passed?(pct>=90?'Excellent work.':'Good work — you reached the pass mark.'):'Review anything you missed, then try again.'}</p><div class="centerActions"><button id="finishAgain" class="secondaryBtn" type="button">Again</button><button id="finishWeek" class="primaryBtn" type="button">Back to ${WEEKS[currentWeek].title}</button></div></div>`;
 }
 function wireFinishButtons(){
   const a=$('#finishAgain'),w=$('#finishWeek');if(a)a.onclick=()=>renderActivity(currentActivity);if(w)w.onclick=()=>route(`#hub/${currentWeek}`);
@@ -1344,6 +1413,26 @@ function validateData(){
 // Home interactions
 $('#globalHome').onclick=()=>route('#home');
 $('#homeChichi').onclick=()=>route('#weeks');
+// Count separate browser-tab sessions, not page reloads or in-app navigation.
+// Lifetime count is device/browser-specific and intentionally capped at four.
+(function initializeHomeOnboarding(){
+  const badge=$('#homeOnboardingBadge');
+  const visitKey='chichiG2LionsOnboardingVisits_v1';
+  const sessionKey='chichiG2LionsOnboardingSession_v1';
+  let count=4;
+  try{
+    const saved=Number.parseInt(localStorage.getItem(visitKey)||'0',10);
+    count=Number.isFinite(saved)?Math.max(0,Math.min(4,saved)):0;
+    if(sessionStorage.getItem(sessionKey)!=='1'){
+      count=Math.min(4,count+1);
+      localStorage.setItem(visitKey,String(count));
+      sessionStorage.setItem(sessionKey,'1');
+    }
+  }catch(err){count=4;} // Do not interrupt the learning app if storage is blocked.
+  badge.hidden=count>3;
+  badge.addEventListener('click',()=>route('#weeks'));
+})();
+
 $('#homeRobin').onclick=()=>{try{new Audio('assets/robin_chirp.wav').play()}catch(e){}};
 $('#homeBell').onclick=()=>{try{new Audio('assets/church_bell.wav').play()}catch(e){}};
 window.addEventListener('hashchange',applyRoute);
