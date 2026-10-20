@@ -15,7 +15,7 @@
   --line:#1c1c1c;
   --shadow:0 10px 24px rgba(35,60,75,.14);
   --ui:"Trebuchet MS","Segoe UI",Arial,sans-serif;
-  --storybook:"Comic Sans MS","Segoe Print",cursive;
+  --storybook:"Nunito","Trebuchet MS",Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:var(--ui);color:var(--ink);background:var(--cream)}
@@ -478,5 +478,16 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
 .week4PreviewNotice{margin:18px 0;padding:17px 22px;border:2px dashed #bd9667;border-radius:18px;background:#fff8ed;color:#513d29;line-height:1.5}
 .week4Pending{opacity:.52;cursor:not-allowed;filter:grayscale(.35)}
 
-/* v0.66: mobile interface font only; desktop and storybook unchanged */
-@media (max-width: 767px) { :root { --ui: "Nunito", "Trebuchet MS", "Segoe UI", Arial, sans-serif; } }
+/* v0.67: readable text throughout and portrait artwork on portrait phones. */
+@media (orientation:portrait) and (max-width:700px) {
+ .homeScreen{background:#fffaf0}
+ .homeCanvas{width:min(100vw,calc(100dvh * 928 / 1648));height:min(100dvh,calc(100vw * 1648 / 928));aspect-ratio:928/1648}
+ .homeArtLandscape{display:none}
+ .homeArtPortrait{display:block}
+ .chichiHotspot{left:24%;top:51%;width:43%;height:30%;border-radius:40%}
+ .robinHotspot{left:7%;top:26%;width:23%;height:12%;border-radius:50%}
+ .bellHotspot{left:69%;top:33%;width:10%;height:9%;border-radius:50%}
+ .homeOnboardingBadge{left:53%;top:57%;width:29%}
+}
+@media not all and (orientation:portrait) {.homeArtPortrait{display:none}}
+@media (min-width:701px) {.homeArtPortrait{display:none}}
