@@ -510,3 +510,10 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
  .chichiHotspot {left:23%;top:52%;width:42%;height:28%;border-radius:45%}
  .homeOnboardingBadge {left:54%;top:61%;width:17%;}
 }
+
+/* v0.71: portrait badge to Chichi's right (screen LEFT); preserve its large size.
+   The sticker is a visual hint only, not a second navigation hotspot. */
+@media (orientation:portrait) and (max-width:700px) {
+  .homeOnboardingBadge { left:2%; top:53.5%; width:35%; pointer-events:none; cursor:default; }
+  .chichiHotspot { left:22%; top:52%; width:42%; height:28%; border-radius:45%; }
+}
