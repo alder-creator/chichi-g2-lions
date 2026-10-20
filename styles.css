@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900;1000&display=swap");
 :root{
   --cream:#fffaf0;
   --paper:#fffdf7;
@@ -472,3 +473,10 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
   .hubInfo{grid-row:1}
   .hubArtWrap{grid-row:2;max-height:none}
 }
+
+/* Week 4 working preview: no changes to student-facing weeks */
+.week4PreviewNotice{margin:18px 0;padding:17px 22px;border:2px dashed #bd9667;border-radius:18px;background:#fff8ed;color:#513d29;line-height:1.5}
+.week4Pending{opacity:.52;cursor:not-allowed;filter:grayscale(.35)}
+
+/* v0.66: mobile interface font only; desktop and storybook unchanged */
+@media (max-width: 767px) { :root { --ui: "Nunito", "Trebuchet MS", "Segoe UI", Arial, sans-serif; } }

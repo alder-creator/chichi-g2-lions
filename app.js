@@ -621,9 +621,13 @@ function renderWeeks(){
 
 function renderHub(){
   const w=WEEKS[currentWeek];const host=$('#hubContent');
+  const week4Draft=PREVIEW_ALL && currentWeek===4;
   const tiles=ACTIVITY_ORDER.map(id=>{
     const [name,desc]=ACTIVITY_META[id];
+    // Week 4 Adventure is enabled for teacher preview.
+    const pending=false;
     const done=isDone(currentWeek,id),count=completionCount(currentWeek,id);
+    if(pending)return `<div class="activityTile week4Pending" aria-label="Chichi’s Adventure: artwork and Ryan narration in production"><span class="icon" aria-hidden="true">${ICONS[id]}</span><span><b>${name}</b><small>Artwork and Ryan narration in production</small><span class="progressTick">Not ready for testing</span></span></div>`;
     return `<button class="activityTile ${done?'doneToday':''}" data-activity="${id}" type="button"><span class="icon" aria-hidden="true">${ICONS[id]}</span><span><b>${name}</b><small>${desc}</small><span class="progressTick">${completionLabel(currentWeek,id)}</span></span><span class="completionCount" aria-label="${count} lifetime completions">× ${count}</span></button>`;
   }).join('');
   host.innerHTML=`
@@ -631,6 +635,7 @@ function renderHub(){
       <div class="hubArtWrap"><img class="hubArt" src="${weekArt(currentWeek)}" alt="${w.theme}"><img class="hubBadge" src="${weekBadge(currentWeek)}" alt="${w.title}"></div>
       <div class="hubInfo"><div class="eyebrow">myView 1.4 · Unit 4</div><h1>${w.theme}</h1><p class="hubQuestion">${w.question}</p><div class="skillChips"><span class="skillChip">${w.genre}</span>${w.skills.map(s=>`<span class="skillChip">${s}</span>`).join('')}</div><div class="centerActions" style="justify-content:flex-start"><button id="changeWeek" class="secondaryBtn" type="button">‹ Choose another week</button></div></div>
     </div>
+    ${week4Draft?`<div class="week4PreviewNotice" role="status"><strong>Week 4 — teacher preview only.</strong> Existing vocabulary artwork and activity questions are available to review. Spoken words currently use the browser voice, not Ryan. Chichi’s Adventure includes eight illustrated pages and two reading questions. Its narration currently uses the device browser voice, not recorded Ryan audio. Students still see Week 4 as locked.</div>`:''}
     <div class="activitiesGrid">${tiles}</div>`;
   $('#changeWeek').onclick=()=>route('#weeks');
   $$('.activityTile',host).forEach(b=>b.onclick=()=>route(`#activity/${currentWeek}/${b.dataset.activity}`));
@@ -1094,12 +1099,18 @@ const ADVENTURES={
     ]
   },
   4:{
+    title:'Chichi and the Korean Flag',
+    coverImage:'assets/adventure/week4/Week4_Page_01.png',
+    completeImage:'assets/adventure/week4/Week4_Page_08.png',
     pages:[
-      {title:'The Museum Box',text:'At the town museum, Chichi sees an old map, a photograph, and a small flag.'},
-      {title:'Clues from the Past',text:'Each object tells only part of the story, so Chichi asks what else he can learn.'},
-      {title:'Compare Sources',text:'The map shows where a road was. The photograph shows what buildings looked like.'},
-      {title:'A Symbol',text:'The flag has a river symbol that matches the river on the old map.'},
-      {title:'Build the Story',text:'Chichi learns that several pieces of evidence can work together to explain the past.'}
+      {title:'A Flag in the Wind',image:'assets/adventure/week4/Week4_Page_01.png',text:`One sunny morning, Chichi was walking past a school with his friends, Mina and Joon.<br><br>He saw a flag flying high above the playground.<br><br>“What a beautiful flag!” said Chichi. “What is it called?”`},
+      {title:'The Taegukgi',image:'assets/adventure/week4/Week4_Page_02.png',text:`“That’s the flag of South Korea,” said Mina. “We call it the Taegukgi!”<br><br>Chichi looked closely.<br><br>“I can see red, blue, black and white,” he said. “Do all the colours mean something?”`},
+      {title:'The Red and Blue Circle',image:'assets/adventure/week4/Week4_Page_03.png',text:`“They do!” said Joon. “Look at the circle in the middle.”<br><br>“The red and blue parts represent opposite forces in balance.”<br><br>Chichi thought for a moment.<br><br>“So different things can work together?” he asked.<br><br>“Exactly!” said Joon.`},
+      {title:'Four Special Symbols',image:'assets/adventure/week4/Week4_Page_04.png',text:`Chichi pointed to the black lines.<br><br>“What about those funny shapes?”<br><br>“They’re called trigrams,” explained Mina. “They represent heaven, earth, water and fire.”<br><br>“Wow!” said Chichi. “There’s a lot more to this flag than I thought!”`},
+      {title:'A Journey into the Past',image:'assets/adventure/week4/Week4_Page_05.png',text:`Later, the friends visited a history museum.<br><br>They saw a display about the first Taegukgi.<br><br>“Korea began using the Taegukgi in the 1880s,” explained Joon.<br><br>Chichi stared at the old pictures.<br><br>“That was a very long time ago!”`},
+      {title:'A Symbol of Hope',image:'assets/adventure/week4/Week4_Page_06.png',text:`The next display showed people carrying the Taegukgi during Korea’s struggle for independence.<br><br>“The flag helped people feel brave and hopeful,” said Mina.<br><br>Chichi looked at the pictures quietly.<br><br>“It must have meant so much to them,” he said.`},
+      {title:'The Flag Today',image:'assets/adventure/week4/Week4_Page_07.png',text:`Back at school, the Taegukgi waved proudly in the sunshine.<br><br>“Today, we see it at schools, celebrations and sporting events,” said Joon.<br><br>“And on special national holidays!” added Mina.<br><br>Chichi smiled. “Now I understand why your flag is so important.”`},
+      {title:'A Dragon from Wales!',image:'assets/adventure/week4/Week4_Page_08.png',text:`Then Chichi grinned.<br><br>“Would you like to see the flag from my home?”<br><br>He pulled out a little flag with a big red dragon.<br><br>“That’s the Welsh flag!” he announced proudly.<br><br>Mina laughed. “A dragon! Just like you!”<br><br>“Of course!” said Chichi. “I’m a Welsh dragon!”`}
     ]
   },
   5:{
@@ -1160,8 +1171,8 @@ const ADVENTURE_RC={
     {q:'What is written on the back of the ticket?',choices:['THANK YOU FOR THE CART.','THE TRAIN LEAVES NOW.','WELCOME TO THE MUSEUM.'],answer:'THANK YOU FOR THE CART.'}
   ],
   4:[
-    {q:'Why does Chichi compare several museum objects?',choices:['Each object shows only part of the past.','He wants to choose the prettiest object.','The map is broken.'],answer:'Each object shows only part of the past.'},
-    {q:'What symbol on the flag matches the old map?',choices:['a river','a train','a star'],answer:'a river'}
+    {q:'What do the four black trigrams on the Korean flag represent?',choices:['Four seasons','Heaven, earth, water and fire','Four countries'],answer:'Heaven, earth, water and fire'},
+    {q:'Why was Chichi excited to show the children the Welsh flag?',choices:['It has a red dragon, just like him.','It has a red and blue circle.','It is the oldest flag in the world.'],answer:'It has a red dragon, just like him.'}
   ],
   5:[
     {q:'Where does Chichi get extra markers?',choices:['the school office','the supermarket','the library'],answer:'the school office'},
