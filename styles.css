@@ -491,3 +491,13 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
 }
 @media not all and (orientation:portrait) {.homeArtPortrait{display:none}}
 @media (min-width:701px) {.homeArtPortrait{display:none}}
+
+/* v0.68: fill phone viewport; no centred canvas or blank bands */
+@media (orientation:portrait) and (max-width:700px) {
+ body.homeMode {margin:0;overflow:hidden}
+ .homeScreen.active {display:block;position:fixed;inset:0;width:100%;height:100dvh;overflow:hidden;padding:0;margin:0;background:#fffaf0}
+ .homeCanvas {position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:auto;margin:0}
+ .homeArtPortrait {display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+ .homeArtLandscape {display:none}
+ .homeOnboardingBadge {left:49%;top:56%;width:24%}
+}
