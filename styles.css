@@ -501,3 +501,6 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
  .homeArtLandscape {display:none}
  .homeOnboardingBadge {left:49%;top:56%;width:24%}
 }
+
+/* v0.69: badge beside Chichi, not over the face */
+@media (orientation:portrait) and (max-width:700px) { .homeOnboardingBadge {left:67%;top:58%;width:24%} }
