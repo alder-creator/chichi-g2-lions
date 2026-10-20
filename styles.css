@@ -504,3 +504,9 @@ button.weekCard:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,.
 
 /* v0.69: badge beside Chichi, not over the face */
 @media (orientation:portrait) and (max-width:700px) { .homeOnboardingBadge {left:67%;top:58%;width:24%} }
+
+/* v0.70: constrain Chichi navigation to the character, and keep badge off chalkboard. */
+@media (orientation:portrait) and (max-width:700px) {
+ .chichiHotspot {left:23%;top:52%;width:42%;height:28%;border-radius:45%}
+ .homeOnboardingBadge {left:54%;top:61%;width:17%;}
+}
