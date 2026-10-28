@@ -1,0 +1,55 @@
+"""Generate all 36 Week 4 Ryan clips using the same settings as Weeks 1–3.
+
+Requires internet access because Microsoft's Edge neural voice is online.
+Run from the accompanying GENERATE_RYAN_WEEK4.bat on Windows.
+"""
+from pathlib import Path
+import asyncio
+import json
+import shutil
+import subprocess
+import sys
+
+ROOT=Path(__file__).resolve().parents[1]
+MANIFEST=json.loads((Path(__file__).parent/'ryan_week4_manifest.json').read_text(encoding='utf-8'))
+VOICE=MANIFEST['voice']
+RATE=MANIFEST['rate']
+def require_package(package,module):
+    try:
+        return __import__(module)
+    except ImportError:
+        print(f'Installing {package}...')
+        subprocess.check_call([sys.executable,'-m','pip','install','--upgrade',package])
+        return __import__(module)
+edge_tts=require_package('edge-tts','edge_tts')
+def ffmpeg_exe():
+    x=shutil.which('ffmpeg')
+    if x:return x
+    return require_package('imageio-ffmpeg','imageio_ffmpeg').get_ffmpeg_exe()
+FFMPEG=ffmpeg_exe()
+def clean_audio(raw,final):
+    subprocess.check_call([FFMPEG,'-y','-hide_banner','-loglevel','error','-i',str(raw),
+         '-af','afade=t=in:st=0:d=0.015,adelay=45|45,apad=pad_dur=0.060',
+         '-codec:a','libmp3lame','-b:a','128k',str(final)])
+async def main():
+    jobs=[]
+    for group,words in [('vocab',MANIFEST['vocabulary']),('hfw',MANIFEST['hfw']),('adventure',MANIFEST['adventure_pages'])]:
+        for i,text in enumerate(words,1):
+            path=ROOT/'assets'/'audio'/group/'week4'/f"{'page' if group=='adventure' else 'word'}_{i:02d}.mp3"
+            jobs.append((text,path))
+    print(f'Ryan Week 4: {len(jobs)} clips | {VOICE}, rate {RATE}')
+    for n,(text,path) in enumerate(jobs,1):
+        path.parent.mkdir(parents=True,exist_ok=True)
+        temp=path.with_name('_raw_'+path.name)
+        print(f'{n:02d}/{len(jobs)}: {path.relative_to(ROOT)} — {text[:55]}',flush=True)
+        try:
+            await edge_tts.Communicate(text,VOICE,rate=RATE).save(str(temp))
+            clean_audio(temp,path)
+        finally:
+            if temp.exists():temp.unlink()
+    missing=[str(p) for _,p in jobs if not p.exists() or p.stat().st_size<1000]
+    if missing:raise RuntimeError('Missing / empty clips: '+str(missing))
+    print('SUCCESS: all 36 Week 4 Ryan audio files are in the app.')
+    print('The app ZIP must be rebuilt AFTER generating audio; do not upload the old ZIP.')
+if __name__=='__main__':
+    asyncio.run(main())

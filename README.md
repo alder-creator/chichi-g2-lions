@@ -12,7 +12,8 @@ This is the full Unit 4 rebuild built from the approved G2 visual direction.
 ### Week availability in the normal build
 - Week 1: open
 - Week 2: open
-- Weeks 3–6: built but visually locked / Coming Soon, matching the approved Weeks page
+- Weeks 3–4: open
+- Weeks 5–6: locked / Coming Soon
 
 For teacher/development preview only, add `?preview=1` before the hash, for example:
 `index.html?preview=1#weeks`

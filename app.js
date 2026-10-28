@@ -232,7 +232,7 @@ const WEEKS = {
     }
   },
   4: {
-    title:'Week 4', theme:'America’s Past', available:false,
+    title:'Week 4', theme:'America’s Past', available:true,
     question:'Why is it important to learn about a country’s past?',
     reading:'What Is the Story of Our Flag? / The First American Flag', genre:'Informational Text',
     skills:['diphthongs ow / ou','vowel digraphs ai / ay','forms of be'],
@@ -516,7 +516,7 @@ function browserSpeak(text){
   }catch(e){}
 }
 function ryanWordPath(text){
-  if(currentWeek!==1 && currentWeek!==2 && currentWeek!==3) return null;
+  if(currentWeek<1 || currentWeek>4) return null;
 
   const vocabIdx=WEEKS[currentWeek].vocab.findIndex(v=>v[0]===text);
   if(vocabIdx>=0){
@@ -586,6 +586,8 @@ function setScreen(name){
   $$('.screen').forEach(s=>s.classList.remove('active'));
   $(`#${name}Screen`).classList.add('active');
   document.body.classList.toggle('homeMode', name==='home');
+  if(name!=='home' && typeof halloweenSong!=='undefined' && !halloweenSong.paused){halloweenSong.pause();halloweenSong.currentTime=0;}
+  if(name==='home')requestAnimationFrame(alignHalloweenHotspots);
   scrollTo(0,0);
 }
 function route(hash, replace=false){
@@ -597,10 +599,14 @@ function applyRoute(){
   const page=parts[0];
   if(page==='weeks'){ renderWeeks();setScreen('weeks');return; }
   if(page==='hub'){
-    const w=clamp(Number(parts[1])||1,1,6);currentWeek=w;renderHub();setScreen('hub');return;
+    const w=clamp(Number(parts[1])||1,1,6);
+    if(!WEEKS[w].available && !PREVIEW_ALL){route('#weeks',true);return;}
+    currentWeek=w;renderHub();setScreen('hub');return;
   }
   if(page==='activity'){
-    const w=clamp(Number(parts[1])||1,1,6);const a=parts[2]||'vocab';currentWeek=w;currentActivity=a;renderActivity(a);setScreen('activity');return;
+    const w=clamp(Number(parts[1])||1,1,6);
+    if(!WEEKS[w].available && !PREVIEW_ALL){route('#weeks',true);return;}
+    const a=parts[2]||'vocab';currentWeek=w;currentActivity=a;renderActivity(a);setScreen('activity');return;
   }
   setScreen('home');
 }
@@ -621,7 +627,7 @@ function renderWeeks(){
 
 function renderHub(){
   const w=WEEKS[currentWeek];const host=$('#hubContent');
-  const week4Draft=PREVIEW_ALL && currentWeek===4;
+  const week4Draft=PREVIEW_ALL && currentWeek===4 && !WEEKS[4].available;
   const tiles=ACTIVITY_ORDER.map(id=>{
     const [name,desc]=ACTIVITY_META[id];
     // Week 4 Adventure is enabled for teacher preview.
@@ -1444,8 +1450,53 @@ $('#homeChichi').onclick=()=>route('#weeks');
   badge.addEventListener('click',()=>route('#weeks'));
 })();
 
-$('#homeRobin').onclick=()=>{try{new Audio('assets/robin_chirp.wav').play()}catch(e){}};
-$('#homeBell').onclick=()=>{try{new Audio('assets/church_bell.wav').play()}catch(e){}};
+// Seasonal homepage audio: same song-toggle interaction used by the G1 app.
+const halloweenSong = new Audio('assets/chichis_halloween.mp3');
+halloweenSong.preload='metadata';
+const goblinButton=$('#homeGoblin');
+function updateGoblinSongButton(){
+  const playing=!halloweenSong.paused;
+  goblinButton.setAttribute('aria-pressed',String(playing));
+  goblinButton.setAttribute('aria-label',playing?'Pause Chichi’s Halloween song':'Play Chichi’s Halloween song');
+}
+goblinButton.onclick=()=>{
+  if(!halloweenSong.paused){halloweenSong.pause();updateGoblinSongButton();return;}
+  halloweenSong.play().then(updateGoblinSongButton).catch(err=>console.warn('Halloween song playback was blocked:',err));
+};
+halloweenSong.addEventListener('ended',updateGoblinSongButton);
+halloweenSong.addEventListener('pause',updateGoblinSongButton);
+const spookyGhost = new Audio('assets/spooky_ghost.mp3');
+spookyGhost.preload='auto';
+$('#homeBell').onclick=()=>{
+  spookyGhost.pause();spookyGhost.currentTime=0;
+  spookyGhost.play().catch(err=>console.warn('Ghost effect playback was blocked:',err));
+};
+// The image is cover-cropped on narrow portrait phones, so position hotspots
+// relative to the image rather than the viewport to prevent drifting.
+function alignHalloweenHotspots(){
+  const canvas=$('.homeCanvas');if(!canvas||!canvas.clientWidth||!canvas.clientHeight)return;
+  const portrait=matchMedia('(orientation: portrait) and (max-width:700px)').matches;
+  const nativeW=portrait?941:1672, nativeH=portrait?1672:941;
+  const cw=canvas.clientWidth,ch=canvas.clientHeight;
+  const scale=portrait?Math.max(cw/nativeW,ch/nativeH):Math.min(cw/nativeW,ch/nativeH);
+  const w=nativeW*scale,h=nativeH*scale,ox=(cw-w)/2,oy=(ch-h)/2;
+  function place(el,x,y,ww,hh){
+    if(!el)return;el.style.left=(ox+x*w)+'px';el.style.top=(oy+y*h)+'px';
+    el.style.width=(ww*w)+'px';el.style.height=(hh*h)+'px';
+  }
+  if(portrait){
+    place($('#homeChichi'),.353,.517,.34,.253);
+    place($('#homeGoblin'),.025,.202,.335,.183);
+    place($('#homeBell'),.775,.287,.215,.202);
+  }else{
+    place($('#homeChichi'),.365,.445,.255,.38);
+    place($('#homeGoblin'),.095,.151,.185,.251);
+    place($('#homeBell'),.711,.203,.127,.207);
+  }
+}
+window.addEventListener('resize',alignHalloweenHotspots,{passive:true});
+window.addEventListener('orientationchange',alignHalloweenHotspots,{passive:true});
+requestAnimationFrame(alignHalloweenHotspots);
 window.addEventListener('hashchange',applyRoute);
 validateData();
 if(!location.hash)route('#home',true);else applyRoute();

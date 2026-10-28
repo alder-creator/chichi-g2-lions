@@ -1,0 +1,23 @@
+Chichi's English Town — G2 Lions v0.74
+Week 4 Ryan “Taegukgi” pronunciation update
+
+WHAT CHANGED
+- Re-recorded Ryan's narration on Week 4 adventure pages 02, 05, 06 and 07.
+- Pronunciation input now says “Taygook-ee”, following the teacher's guidance.
+- The visible story still spells the word Taegukgi (태극기).
+- Preserved the original four MP3s under
+  assets/audio/adventure/week4/_original_before_taegukgi_fix/
+- Updated the future Week 4 generator to use the spoken spelling.
+
+UNCHANGED
+- The complete 36-file Week 4 Ryan audio set (23 vocabulary, 5 HFW, 8 story pages).
+- Week 4 unlocked; Weeks 5 and 6 locked.
+- Halloween portrait/landscape homepages, goblin song and church ghost sound.
+- Existing progress tracking, content and navigation.
+
+DEPLOYMENT
+- This ZIP is FLAT: index.html, app.js, styles.css and assets/ are at its root.
+- Upload this ZIP via Cloudflare Pages (or extract and upload the root contents).
+- Hard-refresh the browser after deployment to refresh cached site assets.
+- The corrected pronunciation has been generated and encoded successfully;
+  a human listening check is still recommended before notifying parents.

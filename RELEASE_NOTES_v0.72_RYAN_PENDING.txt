@@ -1,0 +1,9 @@
+Chichi's English Town G2 Lions v0.72 (STAGING, NOT FOR PUBLIC DEPLOYMENT)
+
+Week 4 unlocked in Choose a Week. Weeks 5 and 6 remain locked, including direct # URLs.
+Week 4 content, art, progress and existing lessons preserved from v0.71.
+Ryan pre-recorded speech enabled for Week 4 words, high-frequency words and story.
+Week 4 MP3s ARE NOT INCLUDED because Microsoft neural voice cannot be generated in this offline environment.
+PLEASE RUN GENERATE_RYAN_WEEK4.bat with Internet and Python available on Windows.
+It creates 36 MP3 files inside assets/audio/{vocab,hfw,adventure}/week4/.
+Only publish after generation and packaging of those files, and browser QC.
