@@ -1,0 +1,27 @@
+CHICHI G2 LIONS v0.76 — WEEK 4 WHEEL SPIN QUESTION QUALITY REVIEW
+29 October 2026
+
+Revised questions:
+- Phonics: 30 validated ow/ou and ai/ay items; one spelling question clarified.
+- Words: 30 curated questions with context-based practice; removed randomly selected Week 4 distractors.
+- Reading: 30 original questions across 10 passages focused more closely on American flag history and historical evidence.
+- Fixed inaccurate/out-of-context vocabulary definitions (land, people, state, field).
+
+Preserved:
+- All 36 Week 4 Ryan voice recordings including Taegukgi corrections.
+- Halloween desktop/mobile home, goblin song and church ghost effect.
+- Week 4 unlock, Weeks 5–6 locked, all earlier weeks, wheel progress keys.
+
+Checks:
+- JS syntax: passed
+- 30/30/30 question integrity and prompt uniqueness: passed
+- Browser Wheel Spin and Wheel+ tests at 1280×800 and 390×844: passed
+- Week 5 direct route lock: passed
+- Media files compared to v0.75: unchanged
+
+Historical verification sources:
+https://www.usa.gov/flag
+https://www.si.edu/spotlight/flag-day/flag-facts
+https://bensguide.gpo.gov/the-american-flag
+
+Final live deployment spot check still needed.

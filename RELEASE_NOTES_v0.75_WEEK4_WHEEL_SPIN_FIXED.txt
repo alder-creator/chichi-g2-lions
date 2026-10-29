@@ -1,0 +1,37 @@
+Chichi's English Town — G2 Lions v0.75 (2026-10-29)
+
+ISSUE
+Week 4 was publicly unlocked in v0.72–v0.74, but G2_PHONICS_WHEEL and
+G2_READING_WHEEL defined banks only for Weeks 1–3. A Week 4 spin attempted
+to select a question from an empty list, resulting in no question being shown.
+
+FIX
+- Added G2_PHONICS_WHEEL[4] with 30 distinct questions on ow/ou (/aʊ/)
+  and ai/ay (/eɪ/); difficulty is appropriate for myView 1.4 Unit 4 Week 4.
+- Added G2_READING_WHEEL[4] with 10 original flag/history short passages,
+  3 comprehension questions each (30 total).
+- Verified the generated vocabulary Word Wheel is 30 questions (23 words
+  plus seven reverse-meaning questions) with valid answer choices.
+- Introduced guarded question selection and a user-friendly message for any
+  missing or incomplete bank. No spinner should throw when a bank is empty.
+- Extended validateData() to require full 30-item Wheel Spin banks for all
+  available weeks, with answer/choice and reading passage integrity checks.
+- Bumped HTML build and asset cache query version to 0.75.
+
+REGRESSION SAFETY
+- All existing storage keys and progress rules are unchanged. No reset.
+- No other learning activities, week availability, or media changed.
+- Entire Week 4 Ryan audio package and the four Taegukgi fixes remain intact.
+- Halloween desktop/mobile homepage, goblin song and ghost sound remain intact.
+
+QC
+- Node JavaScript syntax passed.
+- In-memory headless Chromium tests at 1280x800 and 390x844 passed.
+- All three Week 4 wheels and the Wheel+ spin each showed usable questions.
+- Each of Weeks 1–4 has a bank of 30 valid questions per wheel type.
+- Week 4 has no duplicate question prompts within each wheel bank.
+- 15 base + 15 Wheel+ question indices are unique in each wheel level.
+- Week 5 direct-link lock still redirects to the week selection screen.
+- Empty-bank safety guard displays an error prompt and disables the spin.
+- Tests ran with an injected in-memory page due local HTTP/file navigation
+  being blocked; final live-deployment device check remains advisable.

@@ -237,8 +237,8 @@ const WEEKS = {
     reading:'What Is the Story of Our Flag? / The First American Flag', genre:'Informational Text',
     skills:['diphthongs ow / ou','vowel digraphs ai / ay','forms of be'],
     vocab:[
-      ['land','a country or nation','01_land.png'],
-      ['people','a group of people who make up a race, tribe, or nation','02_people.png'],
+      ['land','the ground and countryside of a country','01_land.png'],
+      ['people','human beings, especially those who live in a community','02_people.png'],
       ['place','a specific area or region of the world','03_place.png'],
       ['always','all the time; continuously','04_always.png'],
       ['American','relating to or characteristic of the United States','05_American.png'],
@@ -248,7 +248,7 @@ const WEEKS = {
       ['decide','to make up one’s mind','09_decide.png'],
       ['leader','a person who leads','10_leader.png'],
       ['need','to lack or require','11_need.png'],
-      ['state','a group of people living in a political unit that is part of a larger government','12_state.png'],
+      ['state','one of the fifty parts of the United States, each with its own government','12_state.png'],
       ['count','to find out how many of something there are; add up','13_count.png'],
       ['like','similar to; in the same way as','14_like.png'],
       ['make','to cause to be, become, or happen','15_make.png'],
@@ -256,7 +256,7 @@ const WEEKS = {
       ['seamstress','a woman who sews as a job','17_seamstress.png'],
       ['for sure','certain; having no doubt','18_for_sure.png'],
       ['circle','a round shape or arrangement of objects','19_circle.png'],
-      ['field','an area where information is placed','20_field.png'],
+      ['field','a large area of one colour on a flag','20_field.png'],
       ['join','to become a member of','21_join.png'],
       ['row','a line of things or people next to each other','22_row.png'],
       ['first','before all others','23_first.png']
@@ -1290,7 +1290,11 @@ function wheelUnlocked(level,s=loadG2Wheel()){if(g2WheelPlus)return s.wheelMaste
 function preferredG2Wheel(s){if(!s.completed.starter)return 'starter';if(!s.completed.challenge)return 'challenge';return 'master';}
 function g2WheelPattern(i){return ['red','white','red','white','gold'][i%5];}
 function g2Distractors(pool,correct,n=2){return shuffle(pool.filter(x=>x!==correct)).slice(0,n);}
+const G2_WORDS_WHEEL={
+  4:[["Which word means the ground of a country, including its hills and farms?","land",["land","state","place"]],["Which word means the men, women, and children in a community?","people",["people","leader","state"]],["Which word means a particular location, such as a park or school?","place",["place","land","row"]],["Which word means every time, without exception?","always",["always","first","again"]],["Which word describes something from the United States?","American",["American","national","local"]],["Which word means to understand a fact or piece of information?","know",["know","count","decide"]],["Which word means exactly alike, with no difference?","same",["same","like","first"]],["Which word names a pointed symbol often seen on flags?","star",["star","circle","field"]],["Which word means to choose after thinking carefully?","decide",["decide","know","count"]],["Which word means a person who guides a group?","leader",["leader","seamstress","member"]],["Which word means to require something?","need",["need","make","like"]],["What do Americans call one of the 50 parts of their country?","state",["state","county","city"]],["Which word means to find out how many there are?","count",["count","join","know"]],["Which word can mean similar to?","like",["like","unlike","beside"]],["Which word means to create or produce something?","make",["make","count","join"]],["Which word means to have your home in a place?","live",["live","join","decide"]],["Which word names someone who sews clothes or other items as a job?","seamstress",["seamstress","historian","leader"]],["Which phrase means without any doubt?","for sure",["for sure","at first","once more"]],["Which shape is round and has no corners?","circle",["circle","star","row"]],["On a flag, what word means a broad area of one colour?","field",["field","row","stripe"]],["Which word means to become part of a group?","join",["join","live","count"]],["Which word means a line of things side by side?","row",["row","field","circle"]],["Which word means before all the others?","first",["first","always","same"]],["The two flags are different sizes, but the colours are the ___.","same",["same","first","field"]],["A new ___ was added to the flag when another state joined.","star",["star","seamstress","row"]],["The children will ___ the stars one by one.","count",["count","make","join"]],["The stars are arranged in a straight ___.","row",["row","field","circle"]],["The children will ___ on a flag design after discussing three ideas.","decide",["decide","need","know"]],["We cannot find the answer on the flag alone. We ___ an old photograph too.","need",["need","live","join"]],["Mrs. Kim sews flags at her workshop. She is a ___.","seamstress",["seamstress","leader","state"]]]
+};
 function makeWordWheelBank(week){
+  if(week===4)return G2_WORDS_WHEEL[4].map(x=>wq(x[0],x[1],x[2]));
   const v=WEEKS[week].vocab, words=v.map(x=>x[0]); const out=[];
   v.forEach(([word,def],i)=>out.push(wq(`Which word means “${def}”?`,word,shuffle([word,...g2Distractors(words,word)]))));
   let i=0;while(out.length<30){const [word,def]=v[i%v.length];const defs=v.map(x=>x[1]);out.push(wq(`Choose the best meaning for “${word}”.`,def,shuffle([def,...g2Distractors(defs,def)])));i++;}
@@ -1342,10 +1346,350 @@ const G2_READING_WHEEL={
 ['An older train takes three hours to reach the town. A newer train takes two hours.',['Which train is faster?','The newer train.',['The newer train.','The older train.','Both take the same time.']],['How much time does the newer train save?','one hour',['one hour','two hours','three hours']],['Which comparison is correct?','The newer train is faster than the older train.',['The newer train is faster than the older train.','The older train is fastest than the newer train.','The trains are never different.']]],
 ['A boy finds an old ticket in a museum. After a virtual-reality experience, the ticket is still in his hand, even though he thought it was only part of the program.',['Why is the boy surprised?','The ticket seems to have crossed from the experience into real life.',['The ticket seems to have crossed from the experience into real life.','He forgot how to read.','The museum has no technology.']],['What feeling does the ending create?','mystery',['mystery','boredom','certainty']],['What question is the reader likely to ask?','Was the experience really only virtual?',['Was the experience really only virtual?','What ingredient is in lunch?','How many cattle are on the ranch?']]]
 ]};
+// v0.75: Week 4 Wheel Spin banks. Keep the full 30 per level for normal and Wheel+.
+// The phonics items target /aʊ/ (ow, ou) and /eɪ/ (ai, ay).
+G2_PHONICS_WHEEL[4] = [
+  ['Which word has the same vowel sound as cow?', 'now', ['now','snow','slow']],
+  ['Which word spells the /aʊ/ sound with ow?', 'brown', ['brown','blow','bowl']],
+  ['Complete the word town: t__n', 'ow', ['ow','ou','ai']],
+  ['Which word rhymes with down?', 'crown', ['crown','grown','green']],
+  ['Which word ends with the vowel sound in how?', 'now', ['now','show','shoe']],
+  ['Which word has the /aʊ/ sound spelled ow?', 'owl', ['owl','own','slow']],
+  ['Which word has a DIFFERENT vowel sound?', 'snow', ['snow','cow','town']],
+  ['Complete the word frown: fr__n', 'ow', ['ow','ou','ai']],
+  ['Which word has the same vowel sound as flower?', 'shower', ['shower','slower','floor']],
+  ['Complete the sentence: The bear has ___ fur.', 'brown', ['brown','broun','brone']],
+  ['Which word has the same vowel sound as cloud?', 'loud', ['loud','could','cold']],
+  ['Complete the word shout: sh__t', 'ou', ['ou','ow','ay']],
+  ['Which pair uses ou to spell /aʊ/ in BOTH words?', 'round and sound', ['round and sound','soup and group','could and should']],
+  ['Which word begins with the /aʊ/ sound?', 'out', ['out','old','under']],
+  ['Which word rhymes with house?', 'mouse', ['mouse','horse','rose']],
+  ['Which word does NOT have the /aʊ/ sound?', 'soup', ['soup','count','found']],
+  ['Which two letters make the /aʊ/ sound in count?', 'ou', ['ou','ow','ai']],
+  ['Which word has the /aʊ/ sound in the middle?', 'mountain', ['mountain','morning','mitten']],
+  ['Which word has the long-a /eɪ/ sound?', 'rain', ['rain','ran','run']],
+  ['Which word has the same vowel sound as train?', 'tail', ['tail','tin','tree']],
+  ['Complete the word rain: r__n', 'ai', ['ai','ay','ou']],
+  ['Which word spells the long-a sound with ai?', 'paint', ['paint','pant','point']],
+  ['Which word rhymes with snail?', 'tail', ['tail','tell','tall']],
+  ['Which pair has the SAME vowel sound?', 'wait and day', ['wait and day','wait and down','day and cow']],
+  ['Which word includes ai for the long-a sound?', 'chain', ['chain','chin','clown']],
+  ['Which word spells the long-a sound with ay?', 'play', ['play','plow','plan']],
+  ['Complete the word stay: st__', 'ay', ['ay','ai','ou']],
+  ['Which word ends with the long-a /eɪ/ sound?', 'tray', ['tray','try','toy']],
+  ['Which word rhymes with spray?', 'day', ['day','dry','draw']],
+  ['Which pair has the long-a sound in BOTH words?', 'rain and play', ['rain and play','rain and cow','day and house']]
+];
+
+// Ten original, independent short passages. Three questions per passage.
+// They test retrieval, inference, main idea, word meaning, and source evidence.
+G2_READING_WHEEL[4] = [
+  [
+    "In 1777, leaders of the new United States agreed on a national flag. The design had thirteen red and white stripes and thirteen white stars on a blue background. The stripes represented the thirteen original colonies. The stars showed that these places were joined together as one country. Today, people can look at this early design and learn about the country's beginnings.",
+    [
+      "How many stars did the 1777 design have?",
+      "thirteen",
+      [
+        "thirteen",
+        "fifteen",
+        "fifty"
+      ]
+    ],
+    [
+      "What did the thirteen stripes represent?",
+      "the original thirteen colonies",
+      [
+        "the original thirteen colonies",
+        "the fifty states today",
+        "thirteen presidents"
+      ]
+    ],
+    [
+      "Why is this early flag useful to historians?",
+      "It shows something about the country's beginnings.",
+      [
+        "It shows something about the country's beginnings.",
+        "It gives the names of all the leaders.",
+        "It shows exactly where every colony was."
+      ]
+    ]
+  ],
+  [
+    "A class studies the United States flag that flies outside their school today. It has thirteen stripes and fifty stars. The stripes stand for the original thirteen colonies. Each star stands for one of the fifty states. The teacher asks why the numbers are different. The class decides that the stripes remember the past, while the stars show how many states the country has now.",
+    [
+      "What do the fifty stars stand for?",
+      "the fifty states",
+      [
+        "the fifty states",
+        "the original colonies",
+        "the fifty largest cities"
+      ]
+    ],
+    [
+      "Why are there still thirteen stripes?",
+      "They remember the original colonies.",
+      [
+        "They remember the original colonies.",
+        "There are only thirteen states.",
+        "They count the stripes on an older school flag."
+      ]
+    ],
+    [
+      "Which is the best main idea?",
+      "One flag can tell us about both the past and the present.",
+      [
+        "One flag can tell us about both the past and the present.",
+        "The number of stripes changes every year.",
+        "Every state has the same flag design."
+      ]
+    ]
+  ],
+  [
+    "Long ago, the United States had fewer states than it has today. As new states joined the country, the number of stars on the flag changed. The thirteen stripes stayed as a reminder of the original colonies. At the museum, Maya compares a flag with fewer stars to the one used today. She learns that a changing design can tell part of a country's history.",
+    [
+      "What caused the number of stars to change?",
+      "New states joined the country.",
+      [
+        "New states joined the country.",
+        "The colour of the flag changed.",
+        "The original colonies disappeared."
+      ]
+    ],
+    [
+      "What stayed the same as stars were added?",
+      "the thirteen stripes",
+      [
+        "the thirteen stripes",
+        "the number of stars",
+        "the names of the states"
+      ]
+    ],
+    [
+      "What can Maya learn by comparing the flags?",
+      "The United States grew over time.",
+      [
+        "The United States grew over time.",
+        "The country always had fifty states.",
+        "The first flag had no stripes."
+      ]
+    ]
+  ],
+  [
+    "For a time, the American flag had fifteen stars and fifteen stripes. Two more states had joined the original thirteen. In 1818, a new rule returned the flag to thirteen stripes to remember the first colonies. The number of stars would still grow when new states joined. This helped the flag remember the country's beginning while showing its changes.",
+    [
+      "Why did one early flag have fifteen stars?",
+      "There were fifteen states.",
+      [
+        "There were fifteen states.",
+        "The first colonies had fifteen leaders.",
+        "There were fifteen colours on the flag."
+      ]
+    ],
+    [
+      "What did the 1818 rule change?",
+      "The flag went back to thirteen stripes.",
+      [
+        "The flag went back to thirteen stripes.",
+        "Every star was taken off the flag.",
+        "The country returned to thirteen states."
+      ]
+    ],
+    [
+      "What idea connects the stripes and the stars?",
+      "The flag can remember the past and show growth.",
+      [
+        "The flag can remember the past and show growth.",
+        "The flag must change its colours each year.",
+        "The flag shows where each president lived."
+      ]
+    ]
+  ],
+  [
+    "Joon sees two pictures in a history book. One American flag has forty-nine stars, and another has fifty. His teacher explains that Hawaii became the fiftieth state in 1959. The fifty-star flag began to be used in 1960. Joon writes the dates on a timeline so he can see why the flag changed.",
+    [
+      "What happened in 1959?",
+      "Hawaii became the fiftieth state.",
+      [
+        "Hawaii became the fiftieth state.",
+        "The first American flag was made.",
+        "The number of stripes became fifty."
+      ]
+    ],
+    [
+      "When did the fifty-star flag begin to be used?",
+      "1960",
+      [
+        "1960",
+        "1959",
+        "1777"
+      ]
+    ],
+    [
+      "Why did the flag gain another star?",
+      "It needed a star for the new state.",
+      [
+        "It needed a star for the new state.",
+        "The old stripes had worn out.",
+        "The flag had become too small."
+      ]
+    ]
+  ],
+  [
+    "At a museum, Hana sees two early American flags. Both have thirteen stars, but the stars are arranged differently. A guide explains that the 1777 flag rules did not say exactly where each star must go. Makers could arrange the stars in different patterns. Hana realizes that two flags can represent the same country even when some details look different.",
+    [
+      "How are the two flags alike?",
+      "Both have thirteen stars.",
+      [
+        "Both have thirteen stars.",
+        "Both have fifty stars.",
+        "Both have the same star pattern."
+      ]
+    ],
+    [
+      "Why do the stars form different patterns?",
+      "The early rules did not fix their positions.",
+      [
+        "The early rules did not fix their positions.",
+        "The flags were for two different countries.",
+        "One maker forgot how many stars to use."
+      ]
+    ],
+    [
+      "Which conclusion is supported by the passage?",
+      "Different layouts can still show the same number of stars.",
+      [
+        "Different layouts can still show the same number of stars.",
+        "The stars never had a meaning.",
+        "Every early flag had stars in a circle."
+      ]
+    ]
+  ],
+  [
+    "Sam wants to learn about an old flag displayed in a museum. A label says it was made long ago, but it does not name the person who sewed it. Sam finds a letter from someone who helped make flags at that time. The letter tells him about the work. A photograph shows where a similar flag was carried. Sam learns different things from each source.",
+    [
+      "Which source describes the work of making flags?",
+      "the letter",
+      [
+        "the letter",
+        "the photograph",
+        "the museum label"
+      ]
+    ],
+    [
+      "What does the photograph help Sam learn?",
+      "where a similar flag was carried",
+      [
+        "where a similar flag was carried",
+        "who wrote the letter",
+        "how many stitches the flag has"
+      ]
+    ],
+    [
+      "Why does Sam use several sources?",
+      "Each source offers different details.",
+      [
+        "Each source offers different details.",
+        "Every source gives exactly the same information.",
+        "A photograph can answer every question."
+      ]
+    ]
+  ],
+  [
+    "During international week, Mina carries the Taegukgi, South Korea's flag. Ben carries the American flag. Mina points to the red-and-blue circle on her flag. Ben shows the stars and stripes on his. The two flags look different, so the children ask each other what their symbols mean. They discover that flags can tell stories about the places they represent.",
+    [
+      "Which flag does Mina carry?",
+      "the Taegukgi",
+      [
+        "the Taegukgi",
+        "the American flag",
+        "a school flag"
+      ]
+    ],
+    [
+      "What does Mina point to?",
+      "a red-and-blue circle",
+      [
+        "a red-and-blue circle",
+        "fifty stars",
+        "thirteen stripes"
+      ]
+    ],
+    [
+      "What do the children decide is a good way to learn about a flag?",
+      "Ask what its symbols mean.",
+      [
+        "Ask what its symbols mean.",
+        "Guess its history from its size.",
+        "Assume all flags have the same symbols."
+      ]
+    ]
+  ],
+  [
+    "The pupils make a display called 'The American Flag: Then and Now'. They put an early thirteen-star flag beside a picture of today's flag. They also include a timeline and a map showing how the United States grew. A visitor notices that the stars changed but the stripes still remember the original colonies. The teacher says the display helps people ask questions about history.",
+    [
+      "What is shown beside today's flag?",
+      "an early thirteen-star flag",
+      [
+        "an early thirteen-star flag",
+        "the flag of a different country",
+        "a picture of the school uniform"
+      ]
+    ],
+    [
+      "Which item would best show WHEN new states joined?",
+      "the timeline",
+      [
+        "the timeline",
+        "the classroom door",
+        "a colour chart"
+      ]
+    ],
+    [
+      "What can a visitor learn from the display?",
+      "The flag changed as the country grew.",
+      [
+        "The flag changed as the country grew.",
+        "The stripes count all fifty states.",
+        "The first flag looked exactly like today's flag."
+      ]
+    ]
+  ],
+  [
+    "Emma reads an article about the American flag and writes, 'The first flag had fifty stars.' Her friend Amir finds an image of a 1777 flag with thirteen stars. They check a museum website that explains the early design. Emma corrects her sentence and adds the source to her notes. She learns that a good history project should use evidence rather than guesses.",
+    [
+      "What mistake does Emma correct?",
+      "The first flag had fifty stars.",
+      [
+        "The first flag had fifty stars.",
+        "The flag had stripes.",
+        "The museum has old images."
+      ]
+    ],
+    [
+      "What helps Emma correct her work?",
+      "an old flag image and a museum source",
+      [
+        "an old flag image and a museum source",
+        "a drawing she made from memory",
+        "a guess from a friend"
+      ]
+    ],
+    [
+      "What lesson does Emma learn?",
+      "Historical claims should be checked with evidence.",
+      [
+        "Historical claims should be checked with evidence.",
+        "The newest picture is always the best source.",
+        "A history project needs only one guess."
+      ]
+    ]
+  ]
+];
+
 function makeReadingWheelBank(week){const out=[];(G2_READING_WHEEL[week]||[]).forEach(([passage,...qs])=>qs.forEach(x=>out.push(wq(x[0],x[1],x[2],passage))));return out.slice(0,30);}
 function g2WheelBank(week,level){return level==='starter'?makePhonicsWheelBank(week):level==='challenge'?makeWordWheelBank(week):makeReadingWheelBank(week);}
 function g2WheelMap(week,level,plus=false){const key=`${week}-${level}-${plus?'p':'n'}`;if(g2WheelMaps[key])return g2WheelMaps[key];const bank=g2WheelBank(week,level);const ids=plus?Array.from({length:15},(_,i)=>i+15):Array.from({length:15},(_,i)=>i);g2WheelMaps[key]=shuffle(ids);return g2WheelMaps[key];}
-function currentG2WheelQuestion(segment){const bank=g2WheelBank(currentWeek,g2WheelLevel),map=g2WheelMap(currentWeek,g2WheelLevel,g2WheelPlus),idx=map[segment];return bank[idx%bank.length];}
+function currentG2WheelQuestion(segment){const bank=g2WheelBank(currentWeek,g2WheelLevel);if(bank.length<30)return null;const map=g2WheelMap(currentWeek,g2WheelLevel,g2WheelPlus),idx=map[segment];return bank[idx%bank.length]||null;}
 function g2WheelGoal(level){return G2_WHEEL_LEVELS.find(x=>x.id===level).goal;}
 function renderWheel(){
   const st=loadG2Wheel();if(!wheelUnlocked(g2WheelLevel,st))g2WheelLevel=preferredG2Wheel(st);g2WheelQuestion=null;
@@ -1396,8 +1740,8 @@ function playG2WheelCorrect(){g2WheelSfxNote(1046.5,0,.16,.10);g2WheelSfxNote(13
 function playG2WheelWrong(){g2WheelSfxNote(392,0,.17,.055);g2WheelSfxNote(329.63,.11,.20,.05)}
 function playG2WheelGold(){g2WheelSfxNote(1174.7,0,.12,.07);g2WheelSfxNote(1568,.07,.16,.065);g2WheelSfxNote(2093,.15,.25,.055)}
 
-function renderG2WheelScreen(){const st=loadG2Wheel();renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();const spin=$('#g1WheelSpin');const plusDone=g2WheelPlus&&st.plus[g2WheelLevel].length===15;spin.disabled=g2WheelBusy||st.gameOver||plusDone||(!g2WheelPlus&&!st.wheelMaster&&st.completed[g2WheelLevel]);spin.onclick=spinWheel;if(plusDone){renderG2WheelMilestone();}else if(!g2WheelQuestion)renderG2WheelIdle();}
-function spinWheel(){const st=loadG2Wheel();if(g2WheelBusy||st.gameOver)return;let choices=Array.from({length:15},(_,i)=>i);if(g2WheelPlus)choices=choices.filter(i=>!st.plus[g2WheelLevel].includes(i));if(!choices.length){renderG2WheelMilestone();return;}const idx=choices[Math.floor(Math.random()*choices.length)],step=360/15,target=360-(idx+.5)*step;g2WheelRotation+=720+target-(g2WheelRotation%360);g2WheelBusy=true;startG2WheelSpinSfx();const d=$('#g1WheelDisc');d.style.transform=`rotate(${g2WheelRotation}deg)`;updateG2WheelTokens(true);$('#g1WheelSpin').disabled=true;setTimeout(()=>{stopG2WheelSpinSfx();g2WheelQuestion={...currentG2WheelQuestion(idx),segment:idx,gold:G2_WHEEL_GOLD.includes(idx)};showG2WheelQuestion();if(g2WheelQuestion.gold)playG2WheelGold();g2WheelBusy=false;$('#g1WheelSpin').disabled=false;},3250);}
+function renderG2WheelScreen(){const st=loadG2Wheel();renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();const spin=$('#g1WheelSpin');const plusDone=g2WheelPlus&&st.plus[g2WheelLevel].length===15;const hasQuestions=g2WheelBank(currentWeek,g2WheelLevel).length>=30;spin.disabled=g2WheelBusy||st.gameOver||plusDone||!hasQuestions||(!g2WheelPlus&&!st.wheelMaster&&st.completed[g2WheelLevel]);spin.onclick=spinWheel;if(!hasQuestions){$('#g1WheelQuestionPanel').innerHTML='<div class="g1WheelIdle"><h2>Questions unavailable</h2><p>Please tell your teacher so we can fix this wheel.</p></div>';}else if(plusDone){renderG2WheelMilestone();}else if(!g2WheelQuestion)renderG2WheelIdle();}
+function spinWheel(){const st=loadG2Wheel();if(g2WheelBusy||st.gameOver)return;if(g2WheelBank(currentWeek,g2WheelLevel).length<30){renderG2WheelScreen();return;}let choices=Array.from({length:15},(_,i)=>i);if(g2WheelPlus)choices=choices.filter(i=>!st.plus[g2WheelLevel].includes(i));if(!choices.length){renderG2WheelMilestone();return;}const idx=choices[Math.floor(Math.random()*choices.length)],step=360/15,target=360-(idx+.5)*step;g2WheelRotation+=720+target-(g2WheelRotation%360);g2WheelBusy=true;startG2WheelSpinSfx();const d=$('#g1WheelDisc');d.style.transform=`rotate(${g2WheelRotation}deg)`;updateG2WheelTokens(true);$('#g1WheelSpin').disabled=true;setTimeout(()=>{stopG2WheelSpinSfx();const selected=currentG2WheelQuestion(idx);if(!selected){g2WheelBusy=false;renderG2WheelScreen();return;}g2WheelQuestion={...selected,segment:idx,gold:G2_WHEEL_GOLD.includes(idx)};showG2WheelQuestion();if(g2WheelQuestion.gold)playG2WheelGold();g2WheelBusy=false;$('#g1WheelSpin').disabled=false;},3250);}
 function showG2WheelQuestion(){const q=g2WheelQuestion,host=$('#g1WheelQuestionPanel');host.innerHTML=`<div class="g1WheelQuestionMeta">${g2WheelPlus?`WHEEL+ · SEGMENT ${q.segment+1}`:q.gold?'⭐ CHALLENGE · 20 POINTS + ♥':`${G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short.toUpperCase()} · 10 POINTS`}</div>${q.passage?`<div class="g1WheelPassage">${q.passage}</div>`:''}<div class="g1WheelQuestionText">${q.q}</div><div class="g1WheelAnswers">${shuffle(q.choices).map(x=>`<button class="g1WheelAnswer" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="g1WheelFeedback" class="g1WheelFeedback"></div>`;$$('.g1WheelAnswer',host).forEach(b=>b.onclick=()=>answerG2Wheel(b));}
 function answerG2Wheel(btn){if(!g2WheelQuestion)return;const st=loadG2Wheel(),q=g2WheelQuestion,ok=btn.dataset.answer===q.answer;$$('.g1WheelAnswer').forEach(b=>{b.disabled=true;if(b.dataset.answer===q.answer)b.classList.add('good');});if(!ok)btn.classList.add('bad');const f=$('#g1WheelFeedback');if(ok){f.textContent='Correct!';playG2WheelCorrect();if(g2WheelPlus){if(!st.plus[g2WheelLevel].includes(q.segment))st.plus[g2WheelLevel].push(q.segment);}else{const add=q.gold?20:10;st[g2WheelLevel].points=Math.min(g2WheelGoal(g2WheelLevel),st[g2WheelLevel].points+add);if(q.gold)st.hearts=Math.min(4,st.hearts+1);if(st[g2WheelLevel].points>=g2WheelGoal(g2WheelLevel))st.completed[g2WheelLevel]=true;st.wheelMaster=st.completed.starter&&st.completed.challenge&&st.completed.master;if(st.wheelMaster)markDone(currentWeek,'wheel');}saveG2Wheel(st);setTimeout(()=>{g2WheelQuestion=null;if(!g2WheelPlus&&st.wheelMaster){renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();renderG2WheelMilestone();return;}if(!g2WheelPlus&&st.completed[g2WheelLevel]){const next=G2_WHEEL_LEVELS.find(l=>!st.completed[l.id]);if(next)g2WheelLevel=next.id;}renderG2WheelScreen();},650);}else{playG2WheelWrong();st.hearts=Math.max(0,st.hearts-1);st.gameOver=st.hearts===0;saveG2Wheel(st);f.textContent=`Not this time — the answer is ${q.answer}.`;setTimeout(()=>{g2WheelQuestion=null;renderG2WheelScreen();},850);}}
 function renderG2WheelMilestone(){const st=loadG2Wheel(),host=$('#g1WheelQuestionPanel');if(g2WheelPlus){const all=G2_WHEEL_LEVELS.every(l=>st.plus[l.id].length===15);host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>${all?'Wheel+ Master!':`${G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short} Master!`}</h2><p>${all?'Every segment on all three wheels is green!':'All 15 segments are green!'}</p>${all?'<button id="g1WheelBackWeek" type="button">Back to Week</button>':''}</div>`;if(all)$('#g1WheelBackWeek').onclick=()=>route(`#hub/${currentWeek}`);return;}host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>Wheel Master!</h2><p>Phonics, Words, and Reading are complete. Wheel+ is unlocked!</p><button id="g1WheelStartPlus" type="button">Start Wheel+</button></div>`;$('#g1WheelStartPlus').onclick=()=>{g2WheelPlus=true;g2WheelLevel='starter';st.hearts=4;st.gameOver=false;saveG2Wheel(st);renderWheel();};}
@@ -1423,6 +1767,21 @@ function validateData(){
     }));
     if(w.hfw.length!==5)errors.push(`W${wk}: HFW count ${w.hfw.length}`);
     if(w.vocab.length<8)errors.push(`W${wk}: vocab count ${w.vocab.length}`);
+  }
+  // v0.75: all student-accessible weeks must have complete 30-item banks for
+  // each Wheel Spin level (15 standard segments + 15 additional Wheel+ items).
+  for(const [wk,w] of Object.entries(WEEKS)){
+    if(!w.available)continue;
+    for(const level of G2_WHEEL_LEVELS){
+      const bank=g2WheelBank(Number(wk),level.id);
+      if(bank.length!==30)errors.push(`W${wk} Wheel ${level.id}: ${bank.length}/30 questions`);
+      bank.forEach((q,i)=>{
+        if(!q||!q.q||!Array.isArray(q.choices)||q.choices.length!==3||new Set(q.choices).size!==3||!q.choices.includes(q.answer))
+          errors.push(`W${wk} Wheel ${level.id} #${i+1}: invalid answers`);
+        if(level.id==='master'&&!q.passage)
+          errors.push(`W${wk} Reading Wheel #${i+1}: passage missing`);
+      });
+    }
   }
   if(errors.length)console.error('DATA QC',errors); else console.info('DATA QC passed');
 }
