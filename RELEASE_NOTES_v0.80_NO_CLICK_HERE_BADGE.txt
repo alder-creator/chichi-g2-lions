@@ -1,0 +1,3 @@
+Chichi's English Town — G2 Lions v0.80
+- Removed the floating Click Here onboarding badge from the homepage.
+- No other functional changes.

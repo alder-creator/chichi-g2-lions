@@ -32,9 +32,10 @@ body.homeMode{background:#000;overflow:hidden}
 .homeArt{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;user-select:none;pointer-events:none}
 .sceneHotspot{position:absolute;border:0;background:transparent;cursor:pointer;padding:0}
 .sceneHotspot:hover{background:rgba(255,255,255,.035)}
-.chichiHotspot{left:40.2%;top:43%;width:18%;height:36.8%;border-radius:42%}
-.goblinHotspot{left:10.5%;top:16%;width:16%;height:24%;border-radius:34%}
-.bellHotspot{left:73%;top:21%;width:9%;height:19%;border-radius:35%}
+.contactHotspot{display:block}
+.chichiHotspot{left:41.1%;top:44.2%;width:14.3%;height:34%;border-radius:42%}
+.goblinHotspot{left:56%;top:53.6%;width:10.5%;height:24.5%;border-radius:34%}
+.bellHotspot{left:74.3%;top:24.7%;width:5.5%;height:12%;border-radius:35%}
 /* First-three-visit hint: anchored to the same 16:9 artwork coordinate system. */
 .homeOnboardingBadge{position:absolute;left:34%;top:44%;width:16%;aspect-ratio:1400/1024;z-index:4;border:0;padding:0;background:transparent;cursor:pointer;transform-origin:75% 90%;animation:chichiBadgeBounce 2.1s ease-in-out infinite;filter:drop-shadow(0 4px 5px rgba(0,0,0,.21))}
 .homeOnboardingBadge[hidden]{display:none!important}
@@ -526,3 +527,27 @@ body.homeMode{background:#070b21}
 }
 .sceneHotspot:hover{background:transparent}
 .sceneHotspot:focus-visible{outline:3px solid rgba(255,227,124,.9);outline-offset:1px}
+
+/* v0.77: single temporary exam-prep card occupies the Week 5–6 space. */
+.weeksGrid>.examPrepCard{grid-column:span 2;aspect-ratio:auto;align-self:stretch;cursor:default;}
+.weeksGrid>.examPrepCard picture{display:block;width:100%;height:100%;}
+.weeksGrid>.examPrepCard .examPrepArt{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
+.weeksGrid>.examPrepCard .lockPill{z-index:2;}
+@media(max-width:650px){
+  .weeksGrid>.examPrepCard{grid-column:1/-1;aspect-ratio:16/9;}
+}
+
+/* v0.78: original town hotspots and exact banner aspect ratio. */
+.robinHotspot{left:10.0%;top:22.8%;width:10.7%;height:13.5%;border-radius:50%}
+.bellHotspot{left:74.3%;top:24.7%;width:5.5%;height:12%;border-radius:50%}
+.contactHotspot{left:3.0%;top:54.6%;width:16.4%;height:8.8%;border-radius:20px}
+.weeksGrid > .examPrepCard{grid-column:span 2;aspect-ratio:3.55 / 1!important;position:relative;height:auto!important;align-self:stretch}
+.weeksGrid > .examPrepCard picture{position:absolute;inset:0;display:block;width:100%;height:100%}
+.weeksGrid > .examPrepCard .examPrepArt{display:block;width:100%;height:100%;object-fit:fill;filter:none}
+.weeksGrid > .examPrepCard .lockPill{display:none}
+@media (orientation:portrait) and (max-width:700px){
+ .robinHotspot{left:7%;top:26%;width:23%;height:12%}
+ .bellHotspot{left:69%;top:33%;width:10%;height:9%}
+ .weeksGrid > .examPrepCard{grid-column:1/-1;aspect-ratio:3 / 1!important}
+}
+@media (max-width:650px){.weeksGrid > .examPrepCard{grid-column:1/-1;aspect-ratio:3 / 1!important}}

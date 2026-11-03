@@ -1,3 +1,22 @@
+# CURRENT — G2 Lions v0.79 (2 November 2026)
+
+- Base v0.77, with all Week 1–4 study materials, 90 Week 4 Wheel Spin questions, and 36 Ryan recordings preserved.
+- Final Exam Prep art approved: grayscale, only Chichi and red Coming Soon badge in colour. Exact 2-column banner at 1600×450 desktop and full image on mobile; Weeks 5–6 remain unavailable and hidden behind locked temporary card.
+- Restored original normal homepage landscape and portrait artwork; robin chirps and church bell replace the Halloween-only goblin song and ghost effect.
+- Preserved Halloween assets in ZIP for optional future seasonal rollback.
+- Old base rollback: chichi-g2-lions_v0.77_FINAL_EXAM_PREP_COMING_SOON.zip.
+- Pending: write and QC Final Exam Prep lessons before unlocking.
+
+# Current G2 Lions build v0.77 (Final Exam Prep placeholder)
+
+- Based on v0.76 Week 4 Wheel QC.
+- Weeks 1-4 preserved.
+- Week 5 and 6 cards hidden temporarily and replaced by one grayscale, locked Final Exam Prep card.
+- Existing weeks 5 and 6 remain unavailable; no exam exercises or links are enabled.
+- Halloween, Ryan narration, Wheel Spin questions and progress handling remain unchanged.
+- Rollback: chichi-g2-lions_v0.76_WEEK4_WHEEL_QUESTION_QC.zip.
+- Need to add reviewed final exam preparation content before unlocking the card.
+
 # Chichi's English Town — G2 Lions Current Handoff
 Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 
@@ -38,3 +57,24 @@ Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 - https://www.usa.gov/flag
 - https://www.si.edu/spotlight/flag-day/flag-facts
 - https://bensguide.gpo.gov/the-american-flag
+
+
+## v0.79 update
+- Desktop homepage uses the approved daytime Chichi-and-goblin illustration shared with G1.
+- Robin hotspot retained for birdsong. Goblin hotspot added for Halloween song.
+- Yellow signpost now links to Contact Teacher by email on desktop.
+- Portrait/mobile homepage remains the original G2 image.
+
+
+## v0.80 update
+- Removed the floating "Click here" onboarding badge from the homepage.
+- Retained the approved daytime homepage, goblin Halloween-song hotspot, robin sound, bell, and contact sign.
+
+
+## v0.81 — Adventure page navigation
+- Fixed narration gate: Chichi’s Adventure pages can now be turned without listening first, for all available weeks (1–4).
+- Narration is optional and can be replayed; advancing still stops audio.
+- Removed stale JavaScript for the deleted Click Here onboarding badge (v0.80 regression causing a null-element error at startup).
+- End-of-story reading checks unchanged.
+- Homepage and previously approved artwork, Ryan MP3s, wheel banks, and Week 5–6 exam placeholder unchanged.
+- Rollback: v0.80.

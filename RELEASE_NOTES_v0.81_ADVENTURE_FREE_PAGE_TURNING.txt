@@ -1,0 +1,2 @@
+Chichi’s English Town G2 Lions v0.81
+Removed mandatory listening before page navigation in Chichi’s Adventure. All 1–4 weeks allow Next Page immediately. Narration is optional, can replay, and stops when changing pages. Reading questions remain. Also removed stale onboarding badge JS that could interrupt app startup. Assets unchanged. Rollback v0.80.

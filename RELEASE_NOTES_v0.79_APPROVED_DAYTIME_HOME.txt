@@ -1,0 +1,6 @@
+Chichi's English Town — G2 Lions v0.79
+- Replaced the desktop homepage with the approved daytime Chichi-and-goblin scene used for G1.
+- Added goblin hotspot to play Chichi's Halloween song on desktop.
+- Added yellow signpost contact hotspot on desktop.
+- Preserved robin birdsong, church bell, Weeks 1–4, final-exam-prep banner, Ryan recordings, and wheel-spin fixes.
+- Portrait/mobile homepage remains the original G2 artwork.

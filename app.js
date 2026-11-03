@@ -586,8 +586,7 @@ function setScreen(name){
   $$('.screen').forEach(s=>s.classList.remove('active'));
   $(`#${name}Screen`).classList.add('active');
   document.body.classList.toggle('homeMode', name==='home');
-  if(name!=='home' && typeof halloweenSong!=='undefined' && !halloweenSong.paused){halloweenSong.pause();halloweenSong.currentTime=0;}
-  if(name==='home')requestAnimationFrame(alignHalloweenHotspots);
+  
   scrollTo(0,0);
 }
 function route(hash, replace=false){
@@ -615,7 +614,9 @@ function renderWeeks(){
   const host=$('#weeksGrid');
   host.innerHTML='';
   Object.entries(WEEKS).forEach(([k,w])=>{
-    const n=Number(k);const open=w.available||PREVIEW_ALL;
+    const n=Number(k);
+    if(n===5 || n===6)return; // temporarily replace Week 5 + 6 with one locked exam-prep tile
+    const open=w.available||PREVIEW_ALL;
     const el=document.createElement(open?'button':'div');
     el.className=`weekCard ${open?'available':'locked'}`;
     if(open){el.type='button';el.onclick=()=>route(`#hub/${n}`);el.setAttribute('aria-label',`Open ${w.title}: ${w.theme}`);}
@@ -623,6 +624,15 @@ function renderWeeks(){
     el.innerHTML=`<img class="weekArt" src="${weekArt(n)}" alt="${w.theme}"><img class="weekBadge" src="${weekBadge(n)}" alt="" aria-hidden="true">${open?'':`<span class="lockPill"><span aria-hidden="true">🔒</span> Coming soon</span>`}`;
     host.appendChild(el);
   });
+  const prep=document.createElement('div');
+  prep.className='weekCard locked examPrepCard';
+  prep.setAttribute('aria-disabled','true');
+  prep.setAttribute('aria-label','Final Exam Prep coming soon');
+  prep.innerHTML=`<picture>
+    <source media="(max-width:650px)" srcset="assets/final_exam_prep/final_exam_prep_mobile_gray.webp">
+    <img class="examPrepArt" src="assets/final_exam_prep/final_exam_prep_wide_gray.webp" alt="Final Exam Prep" loading="eager">
+  </picture>`;
+  host.appendChild(prep);
 }
 
 function renderHub(){
@@ -1194,7 +1204,6 @@ function renderAdventure(){
   const story=ADVENTURES[currentWeek]||{pages:[]};
   const pages=story.pages||[],questions=ADVENTURE_RC[currentWeek]||[];
   let i=-1,rcIndex=0,counted=false; // -1 = opening page
-  const listenedPages=new Set();
   $('#activityContent').innerHTML=activityShell('Chichi’s Adventure','',`<div id="adventureInner"></div>`);
   $('#activityContent .activityHeader')?.classList.add('adventureHeader');
   $('#activityContent .activityPanel')?.classList.add('adventurePanel');
@@ -1203,7 +1212,7 @@ function renderAdventure(){
     if(!counted){counted=true;markDone(currentWeek,'adventure');}
     const host=$('#adventureInner'),completeImg=story.completeImage||pages.at(-1)?.image||weekArt(currentWeek);
     host.innerHTML=`<div class="adventurePage adventureFinish"><div class="adventureImageWrap"><img class="adventureImage" src="${completeImg}" alt="Story complete"></div><div class="questionCard adventureTextCard adventureFinishCard"><div class="big">Story complete!</div><div class="scoreBig adventureRcScore">2 / 2</div><p>Great reading — both questions are correct.</p><div class="centerActions adventureNav"><button id="adventureAgain" class="secondaryBtn" type="button">Read again</button><button id="adventureWeek" class="primaryBtn" type="button">Back to ${WEEKS[currentWeek].title}</button></div></div></div>`;
-    $('#adventureAgain').onclick=()=>{stopAdventureNarration();i=-1;rcIndex=0;counted=false;listenedPages.clear();draw();};
+    $('#adventureAgain').onclick=()=>{stopAdventureNarration();i=-1;rcIndex=0;counted=false;draw();};
     $('#adventureWeek').onclick=()=>{stopAdventureNarration();route(`#hub/${currentWeek}`)};
   }
   function drawQuestion(){
@@ -1227,24 +1236,23 @@ function renderAdventure(){
     if(i<0){
       const cover=story.coverImage||pages[0]?.image||weekArt(currentWeek);
       const storyTitle=story.title||pages[0]?.title||'Chichi’s Adventure';
-      host.innerHTML=`<div class="adventureIntro"><div class="adventureIntroImage"><img src="${cover}" alt="${escapeAttr(storyTitle)}"></div><div class="adventureIntroCard"><div class="eyebrow">${WEEKS[currentWeek].title} · Chichi’s Adventure</div><h2>${storyTitle}</h2><p>Listen to every page, then answer two reading questions.</p><div class="centerActions"><button id="adventureStart" class="nextBtn adventureStartBtn" type="button">Start Story ›</button></div></div></div>`;
+      host.innerHTML=`<div class="adventureIntro"><div class="adventureIntroImage"><img src="${cover}" alt="${escapeAttr(storyTitle)}"></div><div class="adventureIntroCard"><div class="eyebrow">${WEEKS[currentWeek].title} · Chichi’s Adventure</div><h2>${storyTitle}</h2><p>Read each page or listen to the narration, then answer two reading questions.</p><div class="centerActions"><button id="adventureStart" class="nextBtn adventureStartBtn" type="button">Start Story ›</button></div></div></div>`;
       $('#adventureStart').onclick=()=>{stopAdventureNarration();i=0;draw()};
       return;
     }
     if(i>=pages.length){drawQuestion();return;}
-    const page=pages[i],title=page.title,text=page.text,image=page.image||weekArt(currentWeek),alreadyListened=listenedPages.has(i);
-    host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*(i+1)/pages.length}%"></div></div><div class="adventurePage"><div class="adventureImageWrap"><img class="adventureImage" src="${image}" alt="${escapeAttr(title)}"></div><div class="questionCard adventureTextCard"><div class="eyebrow">Page ${i+1} of ${pages.length}</div><h2>${title}</h2><p>${text}</p><div class="adventureListenHint">${alreadyListened?'✓ Narration complete':'Listen to the whole page to unlock Next.'}</div><div class="adventureListenRow"><button id="advListen" class="secondaryBtn adventureListenBtn" type="button">${alreadyListened?'↻ Listen again':'🔊 Listen to page'}</button></div><div class="centerActions adventureNav"><button id="advPrev" class="secondaryBtn" type="button">‹ Back</button><button id="advNext" class="nextBtn" type="button" ${alreadyListened?'':'disabled'}>${i===pages.length-1?'Reading Questions':'Next Page'} ›</button></div></div></div>`;
+    const page=pages[i],title=page.title,text=page.text,image=page.image||weekArt(currentWeek);
+    host.innerHTML=`<div class="progressBar"><div class="progressFill" style="width:${100*(i+1)/pages.length}%"></div></div><div class="adventurePage"><div class="adventureImageWrap"><img class="adventureImage" src="${image}" alt="${escapeAttr(title)}"></div><div class="questionCard adventureTextCard"><div class="eyebrow">Page ${i+1} of ${pages.length}</div><h2>${title}</h2><p>${text}</p><div class="adventureListenHint">Narration is optional. Read or listen at your own pace.</div><div class="adventureListenRow"><button id="advListen" class="secondaryBtn adventureListenBtn" type="button">🔊 Listen to page</button></div><div class="centerActions adventureNav"><button id="advPrev" class="secondaryBtn" type="button">‹ Back</button><button id="advNext" class="nextBtn" type="button">${i===pages.length-1?'Reading Questions':'Next Page'} ›</button></div></div></div>`;
     $('#advListen').onclick=(e)=>{
       const b=e.currentTarget;
-      if(b.classList.contains('playing')){stopAdventureNarration();b.textContent=listenedPages.has(i)?'↻ Listen again':'🔊 Listen to page';b.classList.remove('playing');return;}
+      if(b.classList.contains('playing')){stopAdventureNarration();b.textContent='🔊 Listen to page';b.classList.remove('playing');return;}
       playAdventureNarration(currentWeek,i,text,b,()=>{
-        listenedPages.add(i);
-        const next=$('#advNext'),hint=$('.adventureListenHint'),listen=$('#advListen');
-        if(next)next.disabled=false;if(hint)hint.textContent='✓ Narration complete';if(listen)listen.textContent='↻ Listen again';
+        const listen=$('#advListen');
+        if(listen)listen.textContent='↻ Listen again';
       });
     };
     $('#advPrev').onclick=()=>{stopAdventureNarration();i=Math.max(-1,i-1);draw()};
-    $('#advNext').onclick=()=>{if(!listenedPages.has(i))return;stopAdventureNarration();i++;draw()};
+    $('#advNext').onclick=()=>{stopAdventureNarration();i++;draw()};
   }
   draw();
 }
@@ -1788,74 +1796,15 @@ function validateData(){
 
 // Home interactions
 $('#globalHome').onclick=()=>route('#home');
+const g2HalloweenSong=new Audio('assets/chichis_halloween.mp3');
+g2HalloweenSong.preload='auto';
 $('#homeChichi').onclick=()=>route('#weeks');
-// Count separate browser-tab sessions, not page reloads or in-app navigation.
-// Lifetime count is device/browser-specific and intentionally capped at four.
-(function initializeHomeOnboarding(){
-  const badge=$('#homeOnboardingBadge');
-  const visitKey='chichiG2LionsOnboardingVisits_v1';
-  const sessionKey='chichiG2LionsOnboardingSession_v1';
-  let count=4;
-  try{
-    const saved=Number.parseInt(localStorage.getItem(visitKey)||'0',10);
-    count=Number.isFinite(saved)?Math.max(0,Math.min(4,saved)):0;
-    if(sessionStorage.getItem(sessionKey)!=='1'){
-      count=Math.min(4,count+1);
-      localStorage.setItem(visitKey,String(count));
-      sessionStorage.setItem(sessionKey,'1');
-    }
-  }catch(err){count=4;} // Do not interrupt the learning app if storage is blocked.
-  badge.hidden=count>3;
-  badge.addEventListener('click',()=>route('#weeks'));
-})();
 
-// Seasonal homepage audio: same song-toggle interaction used by the G1 app.
-const halloweenSong = new Audio('assets/chichis_halloween.mp3');
-halloweenSong.preload='metadata';
-const goblinButton=$('#homeGoblin');
-function updateGoblinSongButton(){
-  const playing=!halloweenSong.paused;
-  goblinButton.setAttribute('aria-pressed',String(playing));
-  goblinButton.setAttribute('aria-label',playing?'Pause Chichi’s Halloween song':'Play Chichi’s Halloween song');
-}
-goblinButton.onclick=()=>{
-  if(!halloweenSong.paused){halloweenSong.pause();updateGoblinSongButton();return;}
-  halloweenSong.play().then(updateGoblinSongButton).catch(err=>console.warn('Halloween song playback was blocked:',err));
-};
-halloweenSong.addEventListener('ended',updateGoblinSongButton);
-halloweenSong.addEventListener('pause',updateGoblinSongButton);
-const spookyGhost = new Audio('assets/spooky_ghost.mp3');
-spookyGhost.preload='auto';
-$('#homeBell').onclick=()=>{
-  spookyGhost.pause();spookyGhost.currentTime=0;
-  spookyGhost.play().catch(err=>console.warn('Ghost effect playback was blocked:',err));
-};
-// The image is cover-cropped on narrow portrait phones, so position hotspots
-// relative to the image rather than the viewport to prevent drifting.
-function alignHalloweenHotspots(){
-  const canvas=$('.homeCanvas');if(!canvas||!canvas.clientWidth||!canvas.clientHeight)return;
-  const portrait=matchMedia('(orientation: portrait) and (max-width:700px)').matches;
-  const nativeW=portrait?941:1672, nativeH=portrait?1672:941;
-  const cw=canvas.clientWidth,ch=canvas.clientHeight;
-  const scale=portrait?Math.max(cw/nativeW,ch/nativeH):Math.min(cw/nativeW,ch/nativeH);
-  const w=nativeW*scale,h=nativeH*scale,ox=(cw-w)/2,oy=(ch-h)/2;
-  function place(el,x,y,ww,hh){
-    if(!el)return;el.style.left=(ox+x*w)+'px';el.style.top=(oy+y*h)+'px';
-    el.style.width=(ww*w)+'px';el.style.height=(hh*h)+'px';
-  }
-  if(portrait){
-    place($('#homeChichi'),.353,.517,.34,.253);
-    place($('#homeGoblin'),.025,.202,.335,.183);
-    place($('#homeBell'),.775,.287,.215,.202);
-  }else{
-    place($('#homeChichi'),.365,.445,.255,.38);
-    place($('#homeGoblin'),.095,.151,.185,.251);
-    place($('#homeBell'),.711,.203,.127,.207);
-  }
-}
-window.addEventListener('resize',alignHalloweenHotspots,{passive:true});
-window.addEventListener('orientationchange',alignHalloweenHotspots,{passive:true});
-requestAnimationFrame(alignHalloweenHotspots);
+// Restored original homepage sounds; Halloween-only sound effects are inactive.
+$('#homeRobin').onclick=()=>{try{new Audio('assets/robin_chirp.wav').play()}catch(e){}};
+$('#homeGoblin').onclick=()=>{try{if(!g2HalloweenSong.paused){g2HalloweenSong.pause();g2HalloweenSong.currentTime=0}else{g2HalloweenSong.currentTime=0;g2HalloweenSong.play()}}catch(e){}};
+$('#homeBell').onclick=()=>{try{new Audio('assets/church_bell.wav').play()}catch(e){}};
+$('#homeContact').onclick=(e)=>{ /* let the mailto link open normally */ };
 window.addEventListener('hashchange',applyRoute);
 validateData();
 if(!location.hash)route('#home',true);else applyRoute();
