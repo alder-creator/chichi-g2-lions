@@ -552,12 +552,31 @@ body.homeMode{background:#070b21}
 }
 @media (max-width:650px){.weeksGrid > .examPrepCard{grid-column:1/-1;aspect-ratio:3 / 1!important}}
 
-
-/* v0.82: mobile homepage uses the approved daytime goblin artwork too. */
-@media (orientation:portrait) and (max-width:700px){
- .homeArtPortrait{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
- .robinHotspot{left:3.2%;top:22.8%;width:12.5%;height:5.0%;border-radius:50%}
- .goblinHotspot{left:57.0%;top:34.2%;width:12.3%;height:9.1%;border-radius:34%}
- .bellHotspot{left:78.4%;top:23.5%;width:6.4%;height:4.4%;border-radius:50%}
- .contactHotspot{left:0.0%;top:34.6%;width:15.0%;height:4.0%;border-radius:20px}
+/* v0.84: the exact approved 941x1672 portrait art, matched to G1. Desktop is unchanged. */
+@media(orientation:portrait) and (max-width:700px){
+  .homeScreen,.homeScreen.active{background:#92c8e4!important}
+  .homeCanvas{
+    position:absolute!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
+    transform:translate(-50%,-50%)!important;
+    width:min(100vw,calc(100dvh * 941 / 1672))!important;
+    height:min(100dvh,calc(100vw * 1672 / 941))!important;
+    aspect-ratio:941/1672!important;max-width:none!important;max-height:none!important;
+    margin:0!important;overflow:hidden!important;
+  }
+  .homeArtPortrait{display:block!important;object-fit:contain!important;object-position:center center!important}
+  .homeArtLandscape{display:none!important}
+  .chichiHotspot{left:20.5%!important;top:51.1%!important;width:36.4%!important;height:30.1%!important;border-radius:38%!important}
+  .robinHotspot{left:5.3%!important;top:26.4%!important;width:25%!important;height:12.7%!important;border-radius:50%!important}
+  .goblinHotspot{display:block!important;left:57.5%!important;top:62.5%!important;width:20.5%!important;height:17%!important;border-radius:34%!important}
+  .bellHotspot{left:69.2%!important;top:31.4%!important;width:8.0%!important;height:7.0%!important;border-radius:32%!important}
+  /* The approved portrait has no Contact Teacher sign. Keep the email link visibly usable. */
+  .contactHotspot{
+    display:flex!important;left:57%!important;top:92.4%!important;width:39%!important;height:5.1%!important;
+    justify-content:center;align-items:center;background:rgba(255,248,226,.96)!important;
+    border:2px solid #c39c64!important;border-radius:999px!important;
+    color:#123c60!important;box-shadow:0 3px 5px rgba(43,38,23,.16)!important;
+    text-decoration:none!important;z-index:15!important;
+  }
+  .contactHotspot::after{content:'✉ Contact Teacher';font:800 clamp(11px,3vw,15px)/1.1 system-ui,sans-serif}
+  .contactHotspot:focus-visible{outline:3px solid #2778b3!important;outline-offset:2px}
 }

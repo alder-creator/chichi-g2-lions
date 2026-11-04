@@ -1,4 +1,9 @@
-# CURRENT — G2 Lions v0.82 (3 November 2026)
+## Latest build
+- **Version:** v0.83
+- **Change:** Replaced the mobile portrait homepage asset with a proper updated portrait illustration in the current daytime style, with the goblin beside Chichi. Desktop homepage and non-home activities unchanged.
+- **QC:** Portrait homepage now uses a real 941×1672 portrait asset; old portrait art is no longer referenced as the current homepage asset.
+
+# CURRENT — G2 Lions v0.79 (2 November 2026)
 
 - Base v0.77, with all Week 1–4 study materials, 90 Week 4 Wheel Spin questions, and 36 Ryan recordings preserved.
 - Final Exam Prep art approved: grayscale, only Chichi and red Coming Soon badge in colour. Exact 2-column banner at 1600×450 desktop and full image on mobile; Weeks 5–6 remain unavailable and hidden behind locked temporary card.
@@ -80,9 +85,9 @@ Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 - Rollback: v0.80.
 
 
-## v0.82 — Mobile homepage sync
-- Portrait/mobile homepage now uses the approved daytime Chichi-and-goblin scene instead of the older portrait art.
-- Goblin is visible on phones and remains the Halloween-song hotspot.
-- Robin, bell, and Contact Teacher portrait hitboxes recalibrated to the updated mobile art.
-- Adventure free page turning from v0.81 is preserved.
-- Rollback: v0.81.
+## v0.84 — approved portrait used unchanged in G1 and G2
+- Replaced `assets/home_g2_portrait.png` with exact user-supplied 941x1672 PNG.
+- Desktop landscape image untouched.
+- Calibrated phone Chichi, robin, goblin, and bell touch areas; restored visible Contact Teacher email control because portrait has no painted signpost.
+- Ryan audio, Week 4 Wheel Spin, exam prep placeholder, and adventure free-turning remain unchanged.
+- Rollback: v0.83, though its alternate portrait artwork is not approved.
