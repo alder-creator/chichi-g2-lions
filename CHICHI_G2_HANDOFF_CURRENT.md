@@ -91,3 +91,11 @@ Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 - Calibrated phone Chichi, robin, goblin, and bell touch areas; restored visible Contact Teacher email control because portrait has no painted signpost.
 - Ryan audio, Week 4 Wheel Spin, exam prep placeholder, and adventure free-turning remain unchanged.
 - Rollback: v0.83, though its alternate portrait artwork is not approved.
+
+
+## v0.85 (2026-11-04) — Mobile blue border removed
+- Changed portrait canvas from `min()` (letterboxing with blue bars) to full-bleed viewport cover at the native 941×1672 aspect ratio.
+- Keeps the approved art unchanged; portrait Chichi, robin, goblin, bell and Contact Teacher hotspots travel with the image canvas.
+- Moved the contact control slightly higher to remain visible on wide phone viewports.
+- Desktop art, Ryan audio, Week 4 Wheel questions, all lessons, adventure free-turning and progress unchanged.
+- Rollback: v0.84.
