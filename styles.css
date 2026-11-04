@@ -551,3 +551,13 @@ body.homeMode{background:#070b21}
  .weeksGrid > .examPrepCard{grid-column:1/-1;aspect-ratio:3 / 1!important}
 }
 @media (max-width:650px){.weeksGrid > .examPrepCard{grid-column:1/-1;aspect-ratio:3 / 1!important}}
+
+
+/* v0.82: mobile homepage uses the approved daytime goblin artwork too. */
+@media (orientation:portrait) and (max-width:700px){
+ .homeArtPortrait{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+ .robinHotspot{left:3.2%;top:22.8%;width:12.5%;height:5.0%;border-radius:50%}
+ .goblinHotspot{left:57.0%;top:34.2%;width:12.3%;height:9.1%;border-radius:34%}
+ .bellHotspot{left:78.4%;top:23.5%;width:6.4%;height:4.4%;border-radius:50%}
+ .contactHotspot{left:0.0%;top:34.6%;width:15.0%;height:4.0%;border-radius:20px}
+}

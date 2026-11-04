@@ -1,4 +1,4 @@
-# CURRENT — G2 Lions v0.79 (2 November 2026)
+# CURRENT — G2 Lions v0.82 (3 November 2026)
 
 - Base v0.77, with all Week 1–4 study materials, 90 Week 4 Wheel Spin questions, and 36 Ryan recordings preserved.
 - Final Exam Prep art approved: grayscale, only Chichi and red Coming Soon badge in colour. Exact 2-column banner at 1600×450 desktop and full image on mobile; Weeks 5–6 remain unavailable and hidden behind locked temporary card.
@@ -78,3 +78,11 @@ Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 - End-of-story reading checks unchanged.
 - Homepage and previously approved artwork, Ryan MP3s, wheel banks, and Week 5–6 exam placeholder unchanged.
 - Rollback: v0.80.
+
+
+## v0.82 — Mobile homepage sync
+- Portrait/mobile homepage now uses the approved daytime Chichi-and-goblin scene instead of the older portrait art.
+- Goblin is visible on phones and remains the Halloween-song hotspot.
+- Robin, bell, and Contact Teacher portrait hitboxes recalibrated to the updated mobile art.
+- Adventure free page turning from v0.81 is preserved.
+- Rollback: v0.81.
