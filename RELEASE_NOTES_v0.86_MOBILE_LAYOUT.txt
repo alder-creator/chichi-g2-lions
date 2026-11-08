@@ -1,0 +1,10 @@
+Chichi's English Town G2 Lions — v0.86
+Base: v0.85.
+- FIX: Mobile portrait artwork fills its canvas from top to bottom; beige top gap eliminated.
+- FIX: Removed cut-off floating Contact Teacher pill; noticeboard is now the email hotspot.
+- Hotspot positions match cover geometry, including Chichi, robin, goblin, church bell, and noticeboard.
+- Preserved desktop art, all lessons, Ryan audio, wheel fixes, and Adventure free page navigation.
+- In-browser layout simulations at 360x640, 390x644, 412x745, 390x844: artwork fills viewport.
+- Hit-target centres verified on each mobile viewport; JavaScript syntax and ZIP integrity checks.
+- Not deployed; live site needs final external verification.
+Rollback: v0.85.

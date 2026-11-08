@@ -1,0 +1,7 @@
+G2 Lions v0.90 — Three Wheel Celebration GIFs — 2026-11-05
+Base: user-uploaded approved G2 v0.89 portrait build. No image or hotspot changes to the homepage.
+Bundled three exact user-approved Chichi GIFs (dance, jump/cheer, twirl), and equivalent transparent animated WebPs for clean display over the app artwork.
+After a correct Wheel or Wheel+ answer, one celebration appears, randomly avoiding an immediate repeat, with a short cheerful chime. Wrong answers, spin landing and mere opening the wheel do not trigger celebration.
+Existing persistent Wheel and Wheel+ completion panels also use the randomized animated Chichi. Existing scoring, Ryan audio, question bank, and localStorage keys are unchanged.
+Phone portrait, lesson modules, original illustrated assets and homepage hotspots remain as before.
+Rollback: the user-uploaded chichi-g2-lions_v0.89_FINAL_APPROVED_MOBILE_PORTRAIT(1).zip.

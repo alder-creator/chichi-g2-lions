@@ -1,0 +1,49 @@
+/* Chichi Wheel-completion companion: stays on Wheel page until closed. */
+.chichi-celebration-overlay{
+  position:fixed;inset:0;z-index:9998;pointer-events:none;
+}
+.chichi-celebration-card{
+  position:absolute;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));
+  box-sizing:border-box;width:min(255px,46vw);max-height:86dvh;
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:auto;overflow:visible;
+  border:2px solid #44331f;border-radius:20px;
+  background:#fffdfa;box-shadow:0 7px 0 rgba(71,48,18,.13),0 12px 28px rgba(33,48,65,.27);
+  padding:14px 11px 12px;text-align:center;
+  animation:chichiRewardAppear .22s ease-out both;
+}
+.chichi-celebration-close{
+  position:absolute;top:-10px;right:-10px;z-index:2;
+  display:grid;place-items:center;cursor:pointer;
+  width:36px;height:36px;border:2px solid #44331f;border-radius:50%;
+  color:#44331f;background:#fffdfa;font:900 24px/1 Arial,sans-serif;
+  box-shadow:0 2px 4px rgba(0,0,0,.17);
+}
+.chichi-celebration-close:hover{background:#fff0dd}
+.chichi-celebration-close:focus-visible,.chichi-celebration-replay:focus-visible{outline:3px solid #106bda;outline-offset:3px}
+.chichi-celebration-replay{
+  appearance:none;display:block;margin:0;padding:0;
+  border:0;background:transparent;cursor:pointer;max-width:100%;
+  touch-action:manipulation;
+}
+.chichi-celebration-replay img{
+  display:block;width:auto;max-width:100%;height:min(200px,33dvh);
+  object-fit:contain;border:0;background:transparent;pointer-events:none;
+}
+.chichi-celebration-card strong{
+  font-family:'Segoe Print','Comic Sans MS','Trebuchet MS',sans-serif;
+  font-size:clamp(16px,2vw,21px);line-height:1.2;color:#b84c08;
+}
+@keyframes chichiRewardAppear{from{opacity:0;transform:translateY(16px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:620px){
+  .chichi-celebration-card{width:min(205px,56vw);padding:10px 6px 8px;border-radius:16px}
+  .chichi-celebration-replay img{height:min(165px,29dvh)}
+  .chichi-celebration-card strong{font-size:16px}
+}
+@media(max-height:470px){
+  .chichi-celebration-card{width:min(175px,38vw);padding:7px}
+  .chichi-celebration-replay img{height:min(82px,27dvh)}
+}
+@media(prefers-reduced-motion:reduce){.chichi-celebration-card{animation:none}}
+/* Static legacy Wheel Master artwork stays unchanged. */
+.wheelRewardChichi,.g1WheelCelebrate img{background:transparent!important}

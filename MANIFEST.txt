@@ -175,3 +175,4 @@
 ./assets/weeks/week6.png
 ./index.html
 ./styles.css
+./RELEASE_NOTES_v0.91_REPLAYABLE_WHEEL_CELEBRATIONS.md

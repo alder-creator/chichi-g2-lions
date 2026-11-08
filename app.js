@@ -583,6 +583,7 @@ function playAdventureNarration(week,pageIndex,html,button,onComplete){
 }
 
 function setScreen(name){
+  if((name!=='activity'||currentActivity!=='wheel')&&window.ChichiCelebrate)window.ChichiCelebrate.dismiss();
   $$('.screen').forEach(s=>s.classList.remove('active'));
   $(`#${name}Screen`).classList.add('active');
   document.body.classList.toggle('homeMode', name==='home');
@@ -1751,9 +1752,53 @@ function playG2WheelGold(){g2WheelSfxNote(1174.7,0,.12,.07);g2WheelSfxNote(1568,
 function renderG2WheelScreen(){const st=loadG2Wheel();renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();const spin=$('#g1WheelSpin');const plusDone=g2WheelPlus&&st.plus[g2WheelLevel].length===15;const hasQuestions=g2WheelBank(currentWeek,g2WheelLevel).length>=30;spin.disabled=g2WheelBusy||st.gameOver||plusDone||!hasQuestions||(!g2WheelPlus&&!st.wheelMaster&&st.completed[g2WheelLevel]);spin.onclick=spinWheel;if(!hasQuestions){$('#g1WheelQuestionPanel').innerHTML='<div class="g1WheelIdle"><h2>Questions unavailable</h2><p>Please tell your teacher so we can fix this wheel.</p></div>';}else if(plusDone){renderG2WheelMilestone();}else if(!g2WheelQuestion)renderG2WheelIdle();}
 function spinWheel(){const st=loadG2Wheel();if(g2WheelBusy||st.gameOver)return;if(g2WheelBank(currentWeek,g2WheelLevel).length<30){renderG2WheelScreen();return;}let choices=Array.from({length:15},(_,i)=>i);if(g2WheelPlus)choices=choices.filter(i=>!st.plus[g2WheelLevel].includes(i));if(!choices.length){renderG2WheelMilestone();return;}const idx=choices[Math.floor(Math.random()*choices.length)],step=360/15,target=360-(idx+.5)*step;g2WheelRotation+=720+target-(g2WheelRotation%360);g2WheelBusy=true;startG2WheelSpinSfx();const d=$('#g1WheelDisc');d.style.transform=`rotate(${g2WheelRotation}deg)`;updateG2WheelTokens(true);$('#g1WheelSpin').disabled=true;setTimeout(()=>{stopG2WheelSpinSfx();const selected=currentG2WheelQuestion(idx);if(!selected){g2WheelBusy=false;renderG2WheelScreen();return;}g2WheelQuestion={...selected,segment:idx,gold:G2_WHEEL_GOLD.includes(idx)};showG2WheelQuestion();if(g2WheelQuestion.gold)playG2WheelGold();g2WheelBusy=false;$('#g1WheelSpin').disabled=false;},3250);}
 function showG2WheelQuestion(){const q=g2WheelQuestion,host=$('#g1WheelQuestionPanel');host.innerHTML=`<div class="g1WheelQuestionMeta">${g2WheelPlus?`WHEEL+ · SEGMENT ${q.segment+1}`:q.gold?'⭐ CHALLENGE · 20 POINTS + ♥':`${G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short.toUpperCase()} · 10 POINTS`}</div>${q.passage?`<div class="g1WheelPassage">${q.passage}</div>`:''}<div class="g1WheelQuestionText">${q.q}</div><div class="g1WheelAnswers">${shuffle(q.choices).map(x=>`<button class="g1WheelAnswer" data-answer="${escapeAttr(x)}" type="button">${x}</button>`).join('')}</div><div id="g1WheelFeedback" class="g1WheelFeedback"></div>`;$$('.g1WheelAnswer',host).forEach(b=>b.onclick=()=>answerG2Wheel(b));}
-function answerG2Wheel(btn){if(!g2WheelQuestion)return;const st=loadG2Wheel(),q=g2WheelQuestion,ok=btn.dataset.answer===q.answer;$$('.g1WheelAnswer').forEach(b=>{b.disabled=true;if(b.dataset.answer===q.answer)b.classList.add('good');});if(!ok)btn.classList.add('bad');const f=$('#g1WheelFeedback');if(ok){f.textContent='Correct!';playG2WheelCorrect();if(g2WheelPlus){if(!st.plus[g2WheelLevel].includes(q.segment))st.plus[g2WheelLevel].push(q.segment);}else{const add=q.gold?20:10;st[g2WheelLevel].points=Math.min(g2WheelGoal(g2WheelLevel),st[g2WheelLevel].points+add);if(q.gold)st.hearts=Math.min(4,st.hearts+1);if(st[g2WheelLevel].points>=g2WheelGoal(g2WheelLevel))st.completed[g2WheelLevel]=true;st.wheelMaster=st.completed.starter&&st.completed.challenge&&st.completed.master;if(st.wheelMaster)markDone(currentWeek,'wheel');}saveG2Wheel(st);setTimeout(()=>{g2WheelQuestion=null;if(!g2WheelPlus&&st.wheelMaster){renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();renderG2WheelMilestone();return;}if(!g2WheelPlus&&st.completed[g2WheelLevel]){const next=G2_WHEEL_LEVELS.find(l=>!st.completed[l.id]);if(next)g2WheelLevel=next.id;}renderG2WheelScreen();},650);}else{playG2WheelWrong();st.hearts=Math.max(0,st.hearts-1);st.gameOver=st.hearts===0;saveG2Wheel(st);f.textContent=`Not this time — the answer is ${q.answer}.`;setTimeout(()=>{g2WheelQuestion=null;renderG2WheelScreen();},850);}}
+function answerG2Wheel(btn){
+  if(!g2WheelQuestion)return;
+  const st=loadG2Wheel(),q=g2WheelQuestion,ok=btn.dataset.answer===q.answer;
+  $$('.g1WheelAnswer').forEach(b=>{b.disabled=true;if(b.dataset.answer===q.answer)b.classList.add('good');});
+  if(!ok)btn.classList.add('bad');
+  const f=$('#g1WheelFeedback');
+  if(ok){
+    f.textContent='Correct!';playG2WheelCorrect();
+    let justCompletedNormal=false,justCompletedPlus=false;
+    if(g2WheelPlus){
+      const countBefore=st.plus[g2WheelLevel].length;
+      if(!st.plus[g2WheelLevel].includes(q.segment))st.plus[g2WheelLevel].push(q.segment);
+      justCompletedPlus=countBefore<15&&st.plus[g2WheelLevel].length===15;
+    }else{
+      const wasComplete=!!st.completed[g2WheelLevel];
+      const add=q.gold?20:10;
+      st[g2WheelLevel].points=Math.min(g2WheelGoal(g2WheelLevel),st[g2WheelLevel].points+add);
+      if(q.gold)st.hearts=Math.min(4,st.hearts+1);
+      if(st[g2WheelLevel].points>=g2WheelGoal(g2WheelLevel))st.completed[g2WheelLevel]=true;
+      justCompletedNormal=!wasComplete&&st.completed[g2WheelLevel];
+      st.wheelMaster=st.completed.starter&&st.completed.challenge&&st.completed.master;
+      if(st.wheelMaster)markDone(currentWeek,'wheel');
+    }
+    saveG2Wheel(st);
+    setTimeout(()=>{
+      g2WheelQuestion=null;
+      if(!g2WheelPlus&&st.wheelMaster){
+        renderG2WheelProgress();paintG2Wheel();updateG2WheelCounters();renderG2WheelMilestone();
+      }else{
+        if(!g2WheelPlus&&st.completed[g2WheelLevel]){
+          const next=G2_WHEEL_LEVELS.find(l=>!st.completed[l.id]);
+          if(next)g2WheelLevel=next.id;
+        }
+        renderG2WheelScreen();
+      }
+      if((justCompletedNormal||justCompletedPlus)&&window.ChichiCelebrate){
+        window.ChichiCelebrate.show({sound:true});
+      }
+    },650);
+  }else{
+    playG2WheelWrong();st.hearts=Math.max(0,st.hearts-1);st.gameOver=st.hearts===0;
+    saveG2Wheel(st);f.textContent=`Not this time — the answer is ${q.answer}.`;
+    setTimeout(()=>{g2WheelQuestion=null;renderG2WheelScreen();},850);
+  }
+}
 function renderG2WheelMilestone(){const st=loadG2Wheel(),host=$('#g1WheelQuestionPanel');if(g2WheelPlus){const all=G2_WHEEL_LEVELS.every(l=>st.plus[l.id].length===15);host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>${all?'Wheel+ Master!':`${G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short} Master!`}</h2><p>${all?'Every segment on all three wheels is green!':'All 15 segments are green!'}</p>${all?'<button id="g1WheelBackWeek" type="button">Back to Week</button>':''}</div>`;if(all)$('#g1WheelBackWeek').onclick=()=>route(`#hub/${currentWeek}`);return;}host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/chichi_celebrate_wheel.png" alt="Chichi celebrating"><h2>Wheel Master!</h2><p>Phonics, Words, and Reading are complete. Wheel+ is unlocked!</p><button id="g1WheelStartPlus" type="button">Start Wheel+</button></div>`;$('#g1WheelStartPlus').onclick=()=>{g2WheelPlus=true;g2WheelLevel='starter';st.hearts=4;st.gameOver=false;saveG2Wheel(st);renderWheel();};}
-function resetWheel(){if(!confirm(`Reset ${WEEKS[currentWeek].title} wheel progress?`))return;localStorage.removeItem(wheelStorageKey(currentWeek));localStorage.removeItem(completeKey(currentWeek,'wheel'));g2WheelPlus=false;g2WheelLevel='starter';g2WheelQuestion=null;g2WheelRotation=0;renderWheel();}
+function resetWheel(){if(!confirm(`Reset ${WEEKS[currentWeek].title} wheel progress?`))return;if(window.ChichiCelebrate)window.ChichiCelebrate.dismiss();localStorage.removeItem(wheelStorageKey(currentWeek));localStorage.removeItem(completeKey(currentWeek,'wheel'));g2WheelPlus=false;g2WheelLevel='starter';g2WheelQuestion=null;g2WheelRotation=0;renderWheel();}
 
 function finishMarkup(title,score,total,key,passed=score>=passTarget(total)){
   const target=passTarget(total),pct=Math.round(score/total*100);
@@ -1808,3 +1853,31 @@ $('#homeContact').onclick=(e)=>{ /* let the mailto link open normally */ };
 window.addEventListener('hashchange',applyRoute);
 validateData();
 if(!location.hash)route('#home',true);else applyRoute();
+
+
+// v0.86: preserve accurate tap targets in full-bleed portrait layouts.
+(function setupPortraitHomeHotspots(){
+  function align(){
+    if(!window.matchMedia('(orientation:portrait) and (max-width:700px)').matches)return;
+    const canvas=document.querySelector('.homeCanvas');if(!canvas)return;
+    const cw=canvas.clientWidth,ch=canvas.clientHeight;if(!cw||!ch)return;
+    const scale=Math.max(cw/941,ch/1672);
+    const sw=941*scale,sh=1672*scale,ox=(cw-sw)/2,oy=(ch-sh)/2;
+    function place(sel,x,y,w,h){
+      const el=document.querySelector(sel);if(!el)return;
+      el.style.setProperty('left',(ox+x*sw)+'px','important');
+      el.style.setProperty('top',(oy+y*sh)+'px','important');
+      el.style.setProperty('width',(w*sw)+'px','important');
+      el.style.setProperty('height',(h*sh)+'px','important');
+    }
+    // Exact approved 941x1672 mobile artwork; align to visible subjects.
+    place('#homeChichi',.165,.586,.435,.297);
+    place('#homeRobin',.003,.319,.235,.091);
+    place('#homeGoblin',.555,.692,.310,.201);
+    place('#homeBell',.708,.388,.075,.067);
+    place('#homeContact',.007,.524,.312,.047);
+  }
+  window.addEventListener('resize',align,{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(align,100),{passive:true});
+  requestAnimationFrame(align);setTimeout(align,100);
+})();

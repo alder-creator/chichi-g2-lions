@@ -1,0 +1,1 @@
+G2 cache-safe mobile image refresh. Same approved original pixels, a newly versioned URL to avoid accidentally displaying a stale portrait. Existing artwork, scripts, hotspots and celebrations are retained. Does not deploy or clear prior user-browser cache automatically.

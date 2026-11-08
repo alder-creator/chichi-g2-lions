@@ -1,7 +1,42 @@
+## Latest update: G2 v0.91 (2026-11-08) — persistent, replayable Wheel-only Chichi
+- Based strictly on the previous three-celebration release (chichi-g2-lions_v0.90_Three_Celebrations.zip).
+- A Chichi reward now appears ONCE on newly completing an entire normal Wheel level or a 15-segment Wheel+ level; no reward for individual correct answers.
+- The character remains in a small, non-blocking lower-right panel until the student closes it with × or leaves the Wheel activity.
+- Clicking/tapping Chichi replays the same animation and sound; the next completed wheel selects a different animation (no immediate repeats).
+- Existing question scoring, unlocking and normal milestone text remain intact; ordinary answers still play their original correctness sound.
+- Static Wheel Master art in the milestone text remains static; it does not automatically dance just because a saved completion screen was revisited.
+- Panel supports mouse, touch and keyboard, visible focus and reduced-motion preferences. No app-wide backgrounds, hotspots or lesson content altered.
+- QC: changed sources and ZIP integrity verified; targeted interaction/browser QC in this session (see release notes). Not deployed.
+
+## Latest update: G2 v0.90 (2026-11-05)
+- Based on the user-uploaded approved G2 portrait ZIP (v0.89).
+- Three exact approved source GIFs: dancing, jump-and-cheer, and spin. Transparent animated WebP display copies remove the solid pale background; exact original GIFs remain bundled. Random selection avoids immediate repeats.
+- Wheel correct answers (including Wheel+) show a brief musical celebration overlay; incorrect answers and spins do not. Existing scoring and progress storage unchanged.
+- Existing Wheel Master visual stays intact and features the animated mascot.
+- Desktop and mobile homepage artwork, navigation hotspots, exam status, Ryan/Maisie recordings all preserved.
+- New CSS/JS standalone: chichi-celebrations.css/js; original GIFs and optimized transparent WebPs under assets/celebrations/.
+- Rollback: user's original approved ZIP for this version.
+
+### Verification status (2026-11-05)
+- In-memory Chromium interaction tests passed at 1280×800, 390×844 and 360×640 for both grades: correct Wheel answer gave 10 points and showed a celebration; wrong answer gave none. Random selector produced all three assets with no immediate repeats.
+- Standalone celebration display checked at desktop, phone portrait and phone landscape sizes; animation display fit within viewport and images decoded.
+- Inline G1 JavaScript and G2 app.js syntax checked with Node; package CRC check passed. All other original source files preserved byte-identically (585 G1, 417 G2).
+- LIMITATION: Environment blocks Chromium navigation to local test servers, file URLs and actual live-site pages. These are targeted in-memory tests, not a fully navigated desktop/mobile visual end-to-end audit. Live Cloudflare deployment not performed. Verify the published site after deploying.
+- Rollback: retain supplied approved source ZIP (G1 v76.71, G2 v0.89).
+
+v0.89: Exact user-approved 941x1672 portrait art, updated portrait-only hotspots; desktop unchanged; based on v0.88. Image SHA256 01094f3282882b6b032bae1d5935b8fec71c6824166f7cafcc6fbe11c3ff0581
+
+## Latest update: G2 v0.87 (2026-11-04)
+- Base: v0.86 with all lesson, Ryan audio, wheel and mobile layout fixes retained.
+- Exact approved 941×1672 portrait with Chichi and goblin preserved and colour saturation gently reduced by a pixel-level operation.
+- Left-pointing yellow Contact Teacher sign and its timber post composed from approved v76.62 desktop asset; no image recreation.
+- Mobile contact hotspot now aligns with yellow sign. Existing desktop art / hotspot positions are unchanged.
+- Rollback: v0.86.
+
 ## Latest build
-- **Version:** v0.83
-- **Change:** Replaced the mobile portrait homepage asset with a proper updated portrait illustration in the current daytime style, with the goblin beside Chichi. Desktop homepage and non-home activities unchanged.
-- **QC:** Portrait homepage now uses a real 941×1672 portrait asset; old portrait art is no longer referenced as the current homepage asset.
+- **Version:** v0.86
+- **Change:** Verified full-bleed mobile portrait without beige top gap; moved Contact Teacher link onto the noticeboard. Approved desktop art and all lessons unchanged.
+- **QC:** 360×640, 390×644, 412×745 and 390×844 local render/hit-target checks; JS syntax and ZIP integrity; live Cloudflare not tested.
 
 # CURRENT — G2 Lions v0.79 (2 November 2026)
 
@@ -99,3 +134,15 @@ Updated 2026-10-29 | Build **v0.76 — Week 4 Wheel Question QC**
 - Moved the contact control slightly higher to remain visible on wide phone viewports.
 - Desktop art, Ryan audio, Week 4 Wheel questions, all lessons, adventure free-turning and progress unchanged.
 - Rollback: v0.84.
+
+
+## v0.86 — Mobile homepage layout correction (2026-11-04)
+- G2 mobile portrait canvas is anchored to viewport edges, eliminating the beige top gap. Contact Teacher now uses the noticeboard instead of a cut-off floating label. Hotspots are positioned from cover-rendered portrait geometry. Desktop assets and activities remain unchanged.
+- Rollback: v0.85.
+
+
+## v0.88 — exact approved portrait image
+- Replaced only mobile portrait art with byte-identical chichi_s_storybook_village_garden.png (941x1672); no regeneration.
+- Aligned Chichi, robin, goblin, bell and yellow Contact Teacher sign tap zones.
+- Desktop artwork, all week content and Adventure free-page-turning unchanged.
+- Rollback: G2 v0.87.

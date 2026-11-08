@@ -602,3 +602,47 @@ body.homeMode{background:#070b21}
   /* Keep Contact Teacher comfortably inside the visible mobile crop. */
   .contactHotspot{left:55%!important;top:86.6%!important;width:34%!important;height:5.1%!important}
 }
+
+
+/* v0.86: one anchored, full-screen portrait canvas. Never centre an oversized image.
+   The noticeboard becomes the Contact Teacher link; no floating badge. */
+@media (orientation:portrait) and (max-width:700px){
+  html,body,body.homeMode,.homeScreen,.homeScreen.active{margin:0!important;padding:0!important}
+  .homeScreen.active{
+    display:block!important;position:fixed!important;inset:0!important;
+    width:100vw!important;height:100dvh!important;overflow:hidden!important;background:#ecd3a0!important;
+  }
+  .homeCanvas{
+    position:absolute!important;inset:0!important;left:0!important;top:0!important;right:0!important;bottom:0!important;
+    transform:none!important;width:100vw!important;height:100dvh!important;aspect-ratio:auto!important;
+    max-width:none!important;max-height:none!important;margin:0!important;overflow:hidden!important;
+  }
+  .homeArtLandscape{display:none!important}
+  .homeArtPortrait{
+    display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+    object-fit:cover!important;object-position:center center!important;
+  }
+  .contactHotspot{
+    position:absolute!important;display:block!important;background:transparent!important;color:transparent!important;
+    border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;
+    text-decoration:none!important;z-index:15!important;
+  }
+  .contactHotspot::after{content:none!important;display:none!important}
+}
+
+/* v0.87: full-bleed mobile Contact Teacher hotspot follows painted yellow arrow.
+   Pixel-level portrait artwork adjustment only; do not overlay labels or margins. */
+@media (orientation:portrait) and (max-width:700px){
+  .contactHotspot{left:11.5%!important;top:45.6%!important;width:23%!important;height:4.5%!important;
+    background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important;
+    padding:0!important;z-index:28!important}
+  .contactHotspot::after{content:none!important;display:none!important}
+}
+
+/* v0.88: Tap zones are positioned in app.js to follow exact approved portrait artwork.
+   Preserve full-bleed canvas and invisible, unobstructed yellow sign hotspot. */
+@media (orientation:portrait) and (max-width:700px){
+  .homeScreen.active{background:#ecd3a0!important}
+  .contactHotspot{display:block!important;background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important;z-index:28!important}
+  .contactHotspot::after{content:none!important;display:none!important}
+}
