@@ -57,7 +57,7 @@ const WEEKS = {
       {q:'Which word rhymes with farm?',choices:['charm','fern','form'],answer:'charm'},
       {q:'Which word has the ar sound?',choices:['dark','dirt','duck'],answer:'dark'},
       {q:'Which plural needs -es?',choices:['dishes','cats','dogs'],answer:'dishes'},
-      {q:'Choose the correct plural of fox.',choices:['foxes','foxs','foxies'],answer:'foxes'},
+      {q:'Choose the correct plural of brush.',choices:['brushes','brushs','brushies'],answer:'brushes'},
       {q:'Choose the correct form: She ___ the bus.',choices:['catches','catchs','catch'],answer:'catches'},
       {q:'Which word ends with -es?',choices:['brushes','brush','brushed'],answer:'brushes'},
       {q:'Choose the correct plural of box.',choices:['boxes','boxs','boxen'],answer:'boxes'}
@@ -127,7 +127,7 @@ const WEEKS = {
     phonics:[
       {q:'Which word has the er sound?',choices:['her','hat','hop'],answer:'her'},
       {q:'Which word has the ir sound?',choices:['bird','bed','bad'],answer:'bird'},
-      {q:'Which word has the ur sound?',choices:['turn','ten','tin'],answer:'turn'},
+      {q:'Which word has the ur sound?',choices:['curl','can','coin'],answer:'curl'},
       {q:'Choose the r-controlled word.',choices:['shirt','ship','shop'],answer:'shirt'},
       {q:'Which word has the same vowel sound as fur?',choices:['curb','car','care'],answer:'curb'},
       {q:'Add -ing to hum.',choices:['humming','huming','hummingg'],answer:'humming'},
@@ -625,10 +625,11 @@ function renderWeeks(){
     el.innerHTML=`<img class="weekArt" src="${weekArt(n)}" alt="${w.theme}"><img class="weekBadge" src="${weekBadge(n)}" alt="" aria-hidden="true">${open?'':`<span class="lockPill"><span aria-hidden="true">🔒</span> Coming soon</span>`}`;
     host.appendChild(el);
   });
-  const prep=document.createElement('div');
-  prep.className='weekCard locked examPrepCard';
-  prep.setAttribute('aria-disabled','true');
-  prep.setAttribute('aria-label','Final Exam Prep coming soon');
+  const prep=document.createElement('button');
+  prep.type='button';
+  prep.className='weekCard available examPrepCard';
+  prep.setAttribute('aria-label','Open Final Exam Prep');
+  prep.onclick=()=>{window.location.href='final-exam-prep.html';};
   prep.innerHTML=`<picture>
     <source media="(max-width:650px)" srcset="assets/final_exam_prep/final_exam_prep_mobile_gray.webp">
     <img class="examPrepArt" src="assets/final_exam_prep/final_exam_prep_wide_gray.webp" alt="Final Exam Prep" loading="eager">
