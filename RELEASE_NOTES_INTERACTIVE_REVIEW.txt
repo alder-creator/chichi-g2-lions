@@ -1,0 +1,16 @@
+Chichi Final Exam Prep update | v1.00 G2
+Base: Chichi_G2_Lions_v0.99_Visual_Study_Wheel.zip
+- Final Exam tile image set to fit within the frame.
+- Vocabulary card background removed.
+- Child-friendly grammar/reading guides are interactive sequential slides: answer to earn completion check, Chichi dance at guide finish.
+- Present tense grammar and comparison diagrams corrected; markdown formatting artifacts removed.
+- Student-facing school examination disclaimer removed.
+- Review Wheel redesigned to match the numbered 15-segment weekly Wheel Spin page, using the native background, panel, pointer, coloring, and scoring visual language.
+- Questions remain from the existing original review bank; no exam paper or exam questions added.
+- Downloads remain disabled.
+- Vocabulary recorded audio: 120/120 have existing audio files; 0 previously unlinked paths remapped.
+- Missing recorded audio: none.
+- No new audio files were fabricated; remaining unrecorded terms use existing speech fallback.
+- This is a review candidate until complete homepage navigation, all Weeks 1–4 activities, audio, and mobile interaction regression are checked.
+
+Final exam wheel has a separate final-wheel.html page using the original weekly wheel DOM/CSS/asset background and custom original review questions; the prep hub Wheel control navigates to it. Interactive guide and wheel full-run UI tests passed in isolated headless browser harness at 3 widths; live full-site regression remains required.

@@ -597,6 +597,15 @@ function route(hash, replace=false){
 function applyRoute(){
   const parts=(location.hash||'#home').replace(/^#/,'').split('/');
   const page=parts[0];
+  if(page==='finalwheel'){
+    FINAL_WHEEL_ACTIVE=true;currentWeek=1;currentActivity='wheel';
+    prepareFinalQuestions();renderWheel();setScreen('activity');
+    document.body.classList.add('g2FinalWheelMode');
+    const b=document.querySelector('#backWeek');if(b){b.textContent='‹ Final Prep';b.onclick=()=>location.href='final-exam-prep.html';}
+    return;
+  }
+  FINAL_WHEEL_ACTIVE=false;document.body.classList.remove('g2FinalWheelMode');
+  if(page==='reviewgame'){const w=Number(parts[1]),a=parts[2];if([1,2,3,4].includes(w)&&['vocab','listen','order','read','match','phonics'].includes(a)){currentWeek=w;currentActivity=a;renderActivity(a);setScreen('activity');return;}route('#weeks',true);return;}
   if(page==='weeks'){ renderWeeks();setScreen('weeks');return; }
   if(page==='hub'){
     const w=clamp(Number(parts[1])||1,1,6);
@@ -631,8 +640,8 @@ function renderWeeks(){
   prep.setAttribute('aria-label','Open Final Exam Prep');
   prep.onclick=()=>{window.location.href='final-exam-prep.html';};
   prep.innerHTML=`<picture>
-    <source media="(max-width:650px)" srcset="assets/final_exam_prep/final_exam_prep_mobile_gray.webp">
-    <img class="examPrepArt" src="assets/final_exam_prep/final_exam_prep_wide_gray.webp" alt="Final Exam Prep" loading="eager">
+    <source media="(max-width:650px)" srcset="assets/final_exam_prep/final_exam_prep_no_badge_approved_composition.png">
+    <img class="examPrepArt" src="assets/final_exam_prep/final_exam_prep_no_badge_approved_composition.png" alt="Final Exam Prep" loading="eager">
   </picture>`;
   host.appendChild(prep);
 }
@@ -660,7 +669,11 @@ function renderHub(){
 }
 
 function activityShell(title,subtitle,body){
-  return `<div class="activityHeader"><button id="backWeek" class="backBtn" type="button">‹ ${WEEKS[currentWeek].title}</button><div class="activityTitle"><h1>${title}</h1><p>${subtitle}</p></div><span class="headerSpacer"></span></div><div class="activityPanel">${body}</div>`;
+  const reviewRoute=location.hash.match(/^#reviewgame\/([1-4])\/(vocab|listen|order|read|match|phonics)$/);
+  const back=reviewRoute
+    ? `<a class="prepGameBack" href="final-exam-prep.html#games/${reviewRoute[1]}">Back to Final Exam Prep</a>`
+    : `<button id="backWeek" class="backBtn" type="button">‹ ${WEEKS[currentWeek].title}</button>`;
+  return `<div class="activityHeader">${back}<div class="activityTitle"><h1>${title}</h1><p>${subtitle}</p></div><span class="headerSpacer"></span></div><div class="activityPanel">${body}</div>`;
 }
 function wireBack(){ const b=$('#backWeek'); if(b)b.onclick=()=>route(`#hub/${currentWeek}`); }
 function renderActivity(id){
@@ -1281,6 +1294,188 @@ function startExam(){
 }
 
 
+
+const FINAL_WHEEL_BANK=[{"section":"Reading","passage":"Text A: Fixing the Playground\nThe school put new benches beside the playground. Students painted signs to remind everyone to keep the area tidy. Families came to help plant small trees.\n\nText B: A Community Garden\nNeighbors worked together to make an empty lot beautiful. They planted flowers and built wooden seats. People visit the garden to talk and relax.","q":"What do both texts describe?","opts":["People improving a shared place","People travelling abroad","People building a swimming pool"],"a":0,"why":"Look for the idea shared by both passages, not a detail from only one."},{"section":"Reading","passage":"Text A: Fixing the Playground\nThe school put new benches beside the playground. Students painted signs to remind everyone to keep the area tidy. Families came to help plant small trees.\n\nText B: A Community Garden\nNeighbors worked together to make an empty lot beautiful. They planted flowers and built wooden seats. People visit the garden to talk and relax.","q":"Which detail belongs only to Text A?","opts":["People planted things","Students painted reminder signs","There are places to sit"],"a":1,"why":"Compare what each text says; the signs appear in Text A only."},{"section":"Reading","passage":"Text A: Fixing the Playground\nThe school put new benches beside the playground. Students painted signs to remind everyone to keep the area tidy. Families came to help plant small trees.\n\nText B: A Community Garden\nNeighbors worked together to make an empty lot beautiful. They planted flowers and built wooden seats. People visit the garden to talk and relax.","q":"Why did the neighbors make a garden?","opts":["To give people a welcoming place","To close the road","To stop children playing"],"a":0,"why":"The final sentence gives a clue about the garden’s purpose."},{"section":"Reading","passage":"The Missing Costume\nNora brought a paper crown for the class play. When she opened her bag, it was bent. She felt upset because the play would begin soon. Her friend Daniel found some tape and helped her straighten it. Together, they fixed the crown before the music began. Nora thanked Daniel and smiled as the curtain opened.","q":"What caused Nora to feel upset?","opts":["The music was too loud","Her crown was damaged","Daniel went home"],"a":1,"why":"Find the event that made the problem happen."},{"section":"Reading","passage":"The Missing Costume\nNora brought a paper crown for the class play. When she opened her bag, it was bent. She felt upset because the play would begin soon. Her friend Daniel found some tape and helped her straighten it. Together, they fixed the crown before the music began. Nora thanked Daniel and smiled as the curtain opened.","q":"What is the best message of this story?","opts":["Working with a friend can solve a problem","Everyone should wear a crown","Plays should begin late"],"a":0,"why":"A theme is a message that reaches beyond one story event."},{"section":"Reading","passage":"The Missing Costume\nNora brought a paper crown for the class play. When she opened her bag, it was bent. She felt upset because the play would begin soon. Her friend Daniel found some tape and helped her straighten it. Together, they fixed the crown before the music began. Nora thanked Daniel and smiled as the curtain opened.","q":"What happened immediately before the curtain opened?","opts":["Nora thanked Daniel","Nora first packed her crown","The crown became bent"],"a":0,"why":"Use the order of events in the final two sentences."},{"section":"Word Work","q":"Choose the correct sentence: This bridge is ___ than that bridge.","opts":["long","longer","longest"],"a":1,"why":"Use -er to compare two things."},{"section":"Word Work","q":"Choose the correct sentence: That was the ___ puzzle in the set.","opts":["hard","harder","hardest"],"a":2,"why":"Use -est when comparing one with a whole group."},{"section":"Word Work","q":"Which word has the same vowel sound as the “ow” in “brown”?","opts":["town","snow","show"],"a":0,"why":"Brown and town rhyme in their vowel sound."},{"section":"Word Work","q":"Which word has the same vowel sound as “bird”?","opts":["third","beard","board"],"a":0,"why":"Bird and third share the /er/ vowel sound."},{"section":"Word Work","q":"What is the plural of “dish”?","opts":["dishs","dishes","dishies"],"a":1,"why":"Add -es to most nouns ending in sh."},{"section":"Word Work","q":"Which word shows an action completed yesterday?","opts":["climbs","climbed","will climb"],"a":1,"why":"The -ed form usually tells about a past action."},{"section":"Language Skills","q":"Choose the verb for an action happening now.","opts":["is drawing","drew","will draw"],"a":0,"why":"Is + verb-ing can show an action in progress now."},{"section":"Language Skills","q":"Choose the sentence about the future.","opts":["They planted seeds.","They plant seeds.","They will plant seeds."],"a":2,"why":"Will + base verb points to a future action."},{"section":"Language Skills","q":"Which sentence is correct?","opts":["The team are plays.","The team is playing.","The team am playing."],"a":1,"why":"The singular subject team uses is here."},{"section":"Language Skills","q":"Choose the correct past-tense sentence.","opts":["Last night, I watched the stars.","Last night, I watch the stars.","Last night, I will watch the stars."],"a":0,"why":"Last night signals the past, so watched is appropriate."},{"section":"Language Skills","q":"Choose the correct form: There are ___ marbles in this jar than in that one.","opts":["few","fewer","fewest"],"a":1,"why":"Fewer compares amounts of countable things."},{"section":"Language Skills","q":"Which sentence agrees with its subject?","opts":["My parents is cooking.","My parents am cooking.","My parents are cooking."],"a":2,"why":"Plural parents takes are."},{"section":"Reading","q":"Two articles describe different ways people save water. What question helps you compare them?","opts":["What do both articles tell us about saving water?","Which article has more letters?","Which article has the longest title?"],"a":0,"why":"Compare their ideas, not their lengths."},{"section":"Reading","q":"A character lends a classmate her notes when he misses school. Which theme fits best?","opts":["Kindness helps others","School days are too long","Notes are always blue"],"a":0,"why":"A theme is a message you can learn from what characters do."},{"section":"Reading","q":"A child forgets to water a plant. Its leaves droop. What is the cause?","opts":["The plant has leaves","The child forgot to water it","The leaves are green"],"a":1,"why":"The cause explains why something happened."},{"section":"Word Work","q":"Which word has the same vowel sound as “bird”?","opts":["shirt","bread","boat"],"a":0,"why":"Bird and shirt use the same /er/ vowel sound."},{"section":"Word Work","q":"Choose the correct plural: The farmer has two ___.","opts":["brushs","brushes","brushies"],"a":1,"why":"For nouns ending in sh, add -es."},{"section":"Word Work","q":"Choose the correct form: This trail is ___ than the other one.","opts":["long","longer","longest"],"a":1,"why":"Use -er when comparing two things."},{"section":"Language Skills","q":"Which sentence describes something happening right now?","opts":["I am drawing a map.","I drew a map yesterday.","I will draw a map tomorrow."],"a":0,"why":"Am drawing describes a present action."},{"section":"Language Skills","q":"Choose the correct past tense: We ___ the classroom after art.","opts":["clean","cleaned","will clean"],"a":1,"why":"Cleaned is the past-tense form."},{"section":"Language Skills","q":"Which sentence uses the superlative correctly?","opts":["Mina is taller than Sun.","Mina is the tallest on her team.","Mina is tall than Sun."],"a":1,"why":"The tallest compares one person with the whole group."}];
+
+let FINAL_WHEEL_ACTIVE=false,finalWheelWaiting=false,finalWheelAnswered=false,finalWheelCurrentQuestion=null,finalWheelLastMessage='';
+const FINAL_WHEEL_LEVELS=[
+  {id:'challenge',label:'Words',section:'Word Work',goal:150,icon:'⭐'},
+  {id:'master',label:'Language',section:'Language Skills',goal:150,icon:'✏️'},
+  {id:'starter',label:'Reading',section:'Reading',goal:100,icon:'📖'}
+];
+const FINAL_WHEEL_STORAGE_KEY='chichi_g2_final_prep_storywheel_v2';
+function finalEscape(t){return String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function finalShuffle(items){let a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function finalMeta(id){return FINAL_WHEEL_LEVELS.find(x=>x.id===id)||FINAL_WHEEL_LEVELS[0];}
+function blankFinalWheelState(){return {
+ hearts:4,gameOver:false,currentLevel:FINAL_WHEEL_LEVELS[0].id,wheelMaster:false,plusMode:false,
+ starter:{points:0,spins:0,queue:[]},challenge:{points:0,spins:0,queue:[]},master:{points:0,spins:0,queue:[]},
+ completed:{starter:false,challenge:false,master:false},
+ plus:{starter:[],challenge:[],master:[]}
+};}
+function finalBuildQueue(id){return finalShuffle(FINAL_WHEEL_BANK.filter(q=>q.section===finalMeta(id).section));}
+function finalGoal(id){return finalMeta(id).goal;}
+function saveFinalWheelState(st){try{localStorage.setItem(FINAL_WHEEL_STORAGE_KEY,JSON.stringify(st));}catch(e){}}
+function loadFinalWheelState(){
+ const st=blankFinalWheelState();
+ try{
+   const got=JSON.parse(localStorage.getItem(FINAL_WHEEL_STORAGE_KEY)||'null');
+   if(got){
+     Object.assign(st,got);
+     st.completed=Object.assign({starter:false,challenge:false,master:false},got.completed||{});
+     st.plus=Object.assign({starter:[],challenge:[],master:[]},got.plus||{});
+     ['starter','challenge','master'].forEach(id=>{
+       st[id]=Object.assign({points:0,spins:0,queue:[]},got[id]||{});
+       st[id].points=Math.max(0,Math.min(finalGoal(id),Number(st[id].points)||0));
+       st[id].spins=Math.max(0,Number(st[id].spins)||0);
+       st[id].queue=Array.isArray(st[id].queue)&&st[id].queue.length?st[id].queue:finalBuildQueue(id);
+       st.completed[id]=!!st.completed[id]||st[id].points>=finalGoal(id);
+       if(st.completed[id])st[id].points=finalGoal(id);
+       st.plus[id]=[...new Set((st.plus[id]||[]).map(Number).filter(n=>n>=0&&n<15))].sort((a,b)=>a-b);
+     });
+     st.currentLevel=['starter','challenge','master'].includes(st.currentLevel)?st.currentLevel:FINAL_WHEEL_LEVELS[0].id;
+   }
+ }catch(e){}
+ st.hearts=Math.max(0,Math.min(4,Number(st.hearts)||0));
+ ['starter','challenge','master'].forEach(id=>{if(!st[id].queue.length)st[id].queue=finalBuildQueue(id);});
+ return st;
+}
+function prepareFinalQuestions(reset=false){
+ let st=reset?blankFinalWheelState():loadFinalWheelState();
+ ['starter','challenge','master'].forEach(id=>{if(reset||!st[id].queue.length)st[id].queue=finalBuildQueue(id);});
+ saveFinalWheelState(st);
+ finalWheelWaiting=false;finalWheelAnswered=false;finalWheelCurrentQuestion=null;finalWheelLastMessage='';
+ if(reset && document.querySelector('#g1WheelDisc')){g2WheelRotation=0;document.querySelector('#g1WheelDisc').style.transform='rotate(0deg)';}
+}
+function finalUnlocked(id,st){
+ return FINAL_WHEEL_LEVELS.some(level=>level.id===id);
+}
+function finalDoneCount(st){return FINAL_WHEEL_LEVELS.filter(l=>st.completed[l.id]).length;}
+function finalPlusDoneCount(st){return FINAL_WHEEL_LEVELS.filter(l=>(st.plus[l.id]||[]).length>=15).length;}
+function finalNextLevel(st){return (FINAL_WHEEL_LEVELS.find(level=>!st.completed[level.id])||FINAL_WHEEL_LEVELS[0]).id;}
+window.__getG2FinalGreenSet=function(){const st=loadFinalWheelState();return st.plusMode?(st.plus[st.currentLevel]||[]):[];};
+function finalOpenLevel(id){if(g2WheelBusy)return;const st=loadFinalWheelState();if(!finalUnlocked(id,st))return;st.currentLevel=id;saveFinalWheelState(st);finalWheelCurrentQuestion=null;finalWheelWaiting=false;finalWheelAnswered=false;renderG2FinalNativeWheel();}
+function finalRenderQuestion(host,q){
+ const passage=q.passage?'<div class="g1WheelPassage">'+finalEscape(q.passage)+'</div>':'';
+ host.innerHTML='<div class="g1WheelMini">Segment '+q._segment+' / 15 • '+(loadFinalWheelState().plusMode?'Wheel+':'Final Wheel')+'</div>'+passage
+  +'<div class="g1WheelQ">'+finalEscape(q.q)+'</div><div class="g1WheelChoices">'
+  +q.opts.map((opt,i)=>'<button class="g1WheelAnswer" type="button" data-n="'+i+'">'+String.fromCharCode(65+i)+'. '+finalEscape(opt)+'</button>').join('')
+  +'</div><div id="g1WheelFeedback" class="g1WheelFeedback"></div>';
+ host.querySelectorAll('.g1WheelAnswer').forEach(btn=>btn.onclick=()=>answerG2FinalWheel(Number(btn.dataset.n),btn));
+}
+function renderG2FinalNativeWheel(){
+ const st=loadFinalWheelState(),progress=document.querySelector('#g1WheelProgress'),host=document.querySelector('#g1WheelQuestionPanel');
+ g2WheelLevel=st.currentLevel;g2WheelPlus=!!st.plusMode;
+ progress.innerHTML='';
+ FINAL_WHEEL_LEVELS.forEach(l=>{
+   const unlocked=finalUnlocked(l.id,st),complete=st.completed[l.id],plusDone=(st.plus[l.id]||[]).length>=15;
+   const b=document.createElement('button');
+   b.type='button';b.disabled=!unlocked;b.className='g1WheelLevel'+(g2WheelLevel===l.id?' active':'')+(complete?' complete':'')+(!unlocked?' locked':'');
+   b.innerHTML='<strong>'+(st.plusMode?('🟢 '+l.label+(plusDone?' ✓':'')):(l.label+(complete?' ✓':'')))+'</strong><small>'+(st.plusMode?((st.plus[l.id]||[]).length+'/15 green'):(st[l.id].points+' / '+l.goal+' pts'))+'</small>';
+   b.onclick=()=>finalOpenLevel(l.id);progress.appendChild(b);
+ });
+ const master=document.createElement('div');
+ master.className='g1WheelMaster'+(st.wheelMaster?' complete':'')+(st.plusMode?' active':'');
+ master.innerHTML=st.plusMode?('🏆 Wheel+ '+finalPlusDoneCount(st)+'/3'):('🏆 '+finalDoneCount(st)+'/3');
+ progress.appendChild(master);
+ const reset=document.createElement('button');
+ reset.className='g1WheelReset';reset.type='button';reset.id='g2FinalReset';reset.textContent='Reset';
+ reset.onclick=()=>{prepareFinalQuestions(true);renderG2FinalNativeWheel();};
+ progress.appendChild(reset);
+ paintG2Wheel();updateG2WheelTokens(false);
+ const spin=document.querySelector('#g1WheelSpin');
+ spin.onclick=spinG2FinalNativeWheel;
+ spin.disabled=g2WheelBusy||finalWheelWaiting||st.gameOver||(st.plusMode&&finalPlusDoneCount(st)>=3);
+ document.querySelector('#g1WheelPoints').innerHTML=(st.plusMode?'🟢 Green ':'⭐ Points ')+'<b>'+((st.plusMode?(st.plus[st.currentLevel]||[]).length:st[st.currentLevel].points))+' / '+(st.plusMode?15:finalGoal(st.currentLevel))+'</b>';
+ document.querySelector('#g1WheelHearts').innerHTML='❤️ Hearts <b>'+'❤️'.repeat(st.hearts||0)+'♡'.repeat(4-(st.hearts||0))+'</b>';
+ if(st.plusMode&&finalPlusDoneCount(st)>=3){
+   host.innerHTML='<div class="g1WheelIdle"><img src="assets/chichi_celebrate.png" alt="Chichi"><h2>Wheel complete!</h2><p>You finished all three Final Exam Wheel+ boards.</p><p>Tap Reset if you want to play again.</p></div>';
+   spin.disabled=true;return;
+ }
+ if(finalWheelCurrentQuestion&&finalWheelWaiting){finalRenderQuestion(host,finalWheelCurrentQuestion);return;}
+ const msg=finalWheelLastMessage?'<p class="g1WheelStatus">'+finalEscape(finalWheelLastMessage)+'</p>':'';
+ host.innerHTML='<div class="g1WheelIdle"><img src="assets/chichi_present.png" alt="Chichi"><h2>'+(st.plusMode?'Wheel+':finalMeta(st.currentLevel).label+' Wheel')+'</h2><p>'+(st.plusMode?'Turn every segment green.':'Gold segments are worth 20 points and can give you a heart back.')+'</p>'+msg+'</div>';
+}
+function spinG2FinalNativeWheel(){
+ const st=loadFinalWheelState();
+ if(g2WheelBusy||finalWheelWaiting||st.gameOver||(st.plusMode&&finalPlusDoneCount(st)>=3))return;
+ g2WheelBusy=true;finalWheelWaiting=true;finalWheelAnswered=false;finalWheelCurrentQuestion=null;
+ const landing=Math.floor(Math.random()*15),step=360/15,target=360-(landing+.5)*step;
+ g2WheelRotation+=720+((target-(g2WheelRotation%360)+360)%360);
+ startG2WheelSpinSfx();
+ document.querySelector('#g1WheelDisc').style.transform='rotate('+g2WheelRotation+'deg)';
+ updateG2WheelTokens(true);
+ const spin=document.querySelector('#g1WheelSpin');spin.disabled=true;
+ const host=document.querySelector('#g1WheelQuestionPanel');host.innerHTML='<div class="g1WheelIdle"><img src="assets/chichi_think.png" alt="Chichi"><h2>Spinning…</h2><p>Let’s see where the wheel lands.</p></div>';
+ setTimeout(()=>{
+   stopG2WheelSpinSfx();g2WheelBusy=false;
+   const now=loadFinalWheelState(),id=now.currentLevel,seg=landing+1,queue=now[id].queue&&now[id].queue.length?now[id].queue:finalBuildQueue(id);
+   const q=Object.assign({},queue[now[id].spins%queue.length]);now[id].spins=(now[id].spins||0)+1;saveFinalWheelState(now);
+   q._segment=seg;q._gold=g2WheelPattern(landing)==='gold';
+   finalWheelCurrentQuestion=q;
+   renderG2FinalNativeWheel();
+ },3250);
+}
+function answerG2FinalWheel(selected,button){
+ if(!finalWheelCurrentQuestion||finalWheelAnswered)return;
+ finalWheelAnswered=true;
+ const q=finalWheelCurrentQuestion,ok=Number(selected)===Number(q.a),st=loadFinalWheelState(),id=st.currentLevel,goal=finalGoal(id);
+ document.querySelectorAll('.g1WheelAnswer').forEach(btn=>{btn.disabled=true;if(Number(btn.dataset.n)===Number(q.a))btn.classList.add('good');});
+ if(!ok&&button)button.classList.add('bad');
+ if(st.plusMode){
+   if(ok){
+     if(!(st.plus[id]||[]).includes(q._segment-1))st.plus[id].push(q._segment-1);
+     st.plus[id]=[...new Set(st.plus[id])].sort((a,b)=>a-b);
+     if(q._gold&&st.hearts<4)st.hearts+=1;
+     finalWheelLastMessage='✓ Segment '+q._segment+' is green.';
+     if((st.plus[id]||[]).length>=15){
+       finalWheelLastMessage=finalMeta(id).label+' Wheel+ complete!';
+       if(finalPlusDoneCount(st)>=3 && window.ChichiCelebrate)window.ChichiCelebrate.show({title:'Wheel complete!'});
+     }
+     playG2WheelCorrect();
+   }else{
+     st.hearts=Math.max(0,(st.hearts||0)-1);
+     finalWheelLastMessage='Not this time — the answer is '+q.opts[q.a]+'.';
+     if(st.hearts<=0){st.hearts=4;st.plus[id]=[];finalWheelLastMessage+=' Out of hearts, so this Wheel+ restarts.';}
+     playG2WheelWrong();
+   }
+   if((st.plus[id]||[]).length>=15){const next=FINAL_WHEEL_LEVELS.find(l=>(st.plus[l.id]||[]).length<15);if(next)st.currentLevel=next.id;}
+ }else{
+   if(ok){
+     const before=st[id].points||0,earned=q._gold?20:10;
+     st[id].points=Math.min(goal,before+earned);
+     if(q._gold&&st.hearts<4)st.hearts+=1;
+     finalWheelLastMessage='✓ '+(q._gold?('+'+(st[id].points-before)+' points and a heart bonus!'):('+'+(st[id].points-before)+' points!'));
+     if(st[id].points>=goal&&!st.completed[id]){
+       st.completed[id]=true;
+       finalWheelLastMessage=finalMeta(id).label+' wheel complete!';
+       const next=finalNextLevel(st);
+       if(finalDoneCount(st)>=3){
+         st.wheelMaster=true;st.plusMode=true;st.currentLevel=FINAL_WHEEL_LEVELS[0].id;
+         finalWheelLastMessage='All three wheels are complete. Wheel+ is now open!';
+         if(window.ChichiCelebrate)window.ChichiCelebrate.show({title:'Wheel complete!'});
+       }else{
+         st.currentLevel=next;
+       }
+     }
+     playG2WheelCorrect();
+   }else{
+     st.hearts=Math.max(0,(st.hearts||0)-1);
+     finalWheelLastMessage='Not this time — the answer is '+q.opts[q.a]+'.';
+     if(st.hearts<=0){
+       st.hearts=4;
+       if(!st.completed[id])st[id].points=0;
+       finalWheelLastMessage+=' Out of hearts, so this wheel restarts.';
+     }
+     playG2WheelWrong();
+   }
+ }
+ saveFinalWheelState(st);
+ finalWheelWaiting=false;finalWheelCurrentQuestion=null;finalWheelAnswered=false;
+ renderG2FinalNativeWheel();
+}
+
+
 const G2_WHEEL_LEVELS=[
   {id:'starter',short:'Phonics',name:'Phonics Wheel',goal:100},
   {id:'challenge',short:'Words',name:'Words Wheel',goal:150},
@@ -1703,10 +1898,10 @@ function currentG2WheelQuestion(segment){const bank=g2WheelBank(currentWeek,g2Wh
 function g2WheelGoal(level){return G2_WHEEL_LEVELS.find(x=>x.id===level).goal;}
 function renderWheel(){
   const st=loadG2Wheel();if(!wheelUnlocked(g2WheelLevel,st))g2WheelLevel=preferredG2Wheel(st);g2WheelQuestion=null;
-  $('#activityContent').innerHTML=activityShell(g2WheelPlus?'Wheel+':'Wheel Spin','',`<div class="g1WheelStage"><div class="g1WheelProgress" id="g1WheelProgress"></div><div class="g1WheelMain"><div class="g1WheelVisual"><div class="g1WheelPointer"></div><div class="g1ReviewWheel"><div id="g1WheelDisc" class="g1WheelDisc"></div><button id="g1WheelSpin" class="g1WheelSpin" type="button">SPIN</button></div><div class="g1WheelCounters"><span id="g1WheelPoints"></span><span id="g1WheelHearts"></span></div></div><div id="g1WheelQuestionPanel" class="g1WheelQuestionPanel"></div></div></div>`);wireBack();renderG2WheelScreen();
+  $('#activityContent').innerHTML=activityShell(FINAL_WHEEL_ACTIVE?'Final Exam Wheel':g2WheelPlus?'Wheel+':'Wheel Spin','',`<div class="g1WheelStage"><div class="g1WheelProgress" id="g1WheelProgress"></div><div class="g1WheelMain"><div class="g1WheelVisual"><div class="g1WheelPointer"></div><div class="g1ReviewWheel"><div id="g1WheelDisc" class="g1WheelDisc"></div><button id="g1WheelSpin" class="g1WheelSpin" type="button">SPIN</button></div><div class="g1WheelCounters"><span id="g1WheelPoints"></span><span id="g1WheelHearts"></span></div></div><div id="g1WheelQuestionPanel" class="g1WheelQuestionPanel"></div></div></div>`);wireBack();if(FINAL_WHEEL_ACTIVE)renderG2FinalNativeWheel();else renderG2WheelScreen();
 }
 function renderG2WheelProgress(){const st=loadG2Wheel(),host=$('#g1WheelProgress');if(!host)return;host.innerHTML='';G2_WHEEL_LEVELS.forEach(l=>{const b=document.createElement('button');const unlocked=wheelUnlocked(l.id,st),complete=st.completed[l.id],plusDone=st.plus[l.id].length;b.type='button';b.disabled=!unlocked;b.className='g1WheelLevel'+(g2WheelLevel===l.id?' active':'')+(complete?' complete':'')+(!unlocked?' locked':'');b.innerHTML=`<strong>${l.short}</strong><small>${g2WheelPlus?`${plusDone}/15 green`:complete?'✓ Complete':`${st[l.id].points}/${l.goal} pts`}</small>`;b.onclick=()=>{g2WheelLevel=l.id;g2WheelQuestion=null;renderG2WheelScreen();};host.appendChild(b);});const master=document.createElement('button');master.type='button';master.className='g1WheelMaster'+(st.wheelMaster?' complete':'')+(g2WheelPlus?' active':'');master.disabled=!st.wheelMaster;master.innerHTML=st.wheelMaster?(g2WheelPlus?'← Normal':'🏆 Wheel+'):`🏆 ${Object.values(st.completed).filter(Boolean).length}/3`;master.onclick=()=>{g2WheelPlus=!g2WheelPlus;g2WheelLevel='starter';g2WheelQuestion=null;st.hearts=4;st.gameOver=false;saveG2Wheel(st);renderWheel();};host.appendChild(master);const reset=document.createElement('button');reset.className='g1WheelReset';reset.type='button';reset.textContent='Reset';reset.onclick=resetWheel;host.appendChild(reset);}
-function paintG2Wheel(){const d=$('#g1WheelDisc');if(!d)return;d.innerHTML='';const st=loadG2Wheel(),green=new Set(g2WheelPlus?st.plus[g2WheelLevel]:[]),parts=[],line=1.25,angle=360/15;for(let i=0;i<15;i++){const start=i*angle,end=(i+1)*angle,type=g2WheelPattern(i);const c=green.has(i)?'#43b94f':type==='gold'?'#d4af37':type==='red'?'#E20808':'#fffdf7';parts.push(`#171717 ${start}deg ${start+line}deg`,`${c} ${start+line}deg ${end}deg`);}d.style.background=`conic-gradient(${parts.join(',')})`;for(let i=0;i<15;i++){const mid=(i+.5)*angle-90,rad=mid*Math.PI/180,t=document.createElement('div');t.className='g1WheelToken '+(g2WheelPattern(i)==='gold'?'gold':g2WheelPattern(i)==='red'?'light':'red');t.style.left=`${50+Math.cos(rad)*41}%`;t.style.top=`${50+Math.sin(rad)*41}%`;t.textContent=String(i+1);d.appendChild(t);if(g2WheelPattern(i)==='gold'){const h=document.createElement('div');h.className='g1WheelHeart';h.style.left=`${50+Math.cos(rad)*31}%`;h.style.top=`${50+Math.sin(rad)*31}%`;h.textContent='♥';d.appendChild(h);}}updateG2WheelTokens(false);}
+function paintG2Wheel(){const d=$('#g1WheelDisc');if(!d)return;d.innerHTML='';const st=FINAL_WHEEL_ACTIVE&&window.__getG2FinalGreenSet?null:loadG2Wheel(),green=new Set(FINAL_WHEEL_ACTIVE&&window.__getG2FinalGreenSet?window.__getG2FinalGreenSet():(g2WheelPlus&&st?st.plus[g2WheelLevel]:[])),parts=[],line=1.25,angle=360/15;for(let i=0;i<15;i++){const start=i*angle,end=(i+1)*angle,type=g2WheelPattern(i);const c=green.has(i)?'#43b94f':type==='gold'?'#d4af37':type==='red'?'#E20808':'#fffdf7';parts.push(`#171717 ${start}deg ${start+line}deg`,`${c} ${start+line}deg ${end}deg`);}d.style.background=`conic-gradient(${parts.join(',')})`;for(let i=0;i<15;i++){const mid=(i+.5)*angle-90,rad=mid*Math.PI/180,t=document.createElement('div');t.className='g1WheelToken '+(g2WheelPattern(i)==='gold'?'gold':g2WheelPattern(i)==='red'?'light':'red');t.style.left=`${50+Math.cos(rad)*41}%`;t.style.top=`${50+Math.sin(rad)*41}%`;t.textContent=String(i+1);d.appendChild(t);if(g2WheelPattern(i)==='gold'){const h=document.createElement('div');h.className='g1WheelHeart';h.style.left=`${50+Math.cos(rad)*31}%`;h.style.top=`${50+Math.sin(rad)*31}%`;h.textContent='♥';d.appendChild(h);}}updateG2WheelTokens(false);}
 function updateG2WheelTokens(anim=true){const d=$('#g1WheelDisc');if(!d)return;$$('.g1WheelToken,.g1WheelHeart',d).forEach(el=>{el.style.transition=anim?'transform 3.2s cubic-bezier(.12,.74,.11,1)':'none';el.style.transform=`translate(-50%,-50%) rotate(${-g2WheelRotation}deg)`;});}
 function updateG2WheelCounters(){const st=loadG2Wheel(),goal=g2WheelGoal(g2WheelLevel);$('#g1WheelPoints').innerHTML=g2WheelPlus?`🟢 Green <b>${st.plus[g2WheelLevel].length}/15</b>`:`⭐ Points <b>${st[g2WheelLevel].points}/${goal}</b>`;$('#g1WheelHearts').innerHTML=`❤️ Hearts <b>${'❤️'.repeat(st.hearts)}${'♡'.repeat(4-st.hearts)}</b>`;}
 function renderG2WheelIdle(){const host=$('#g1WheelQuestionPanel'),st=loadG2Wheel(),name=G2_WHEEL_LEVELS.find(x=>x.id===g2WheelLevel).short;if(st.gameOver){host.innerHTML=`<div class="g1WheelCelebrate"><img src="assets/crying_red_dragon_mascot.png" alt="Chichi"><h2>Out of hearts!</h2><p>Your progress is safe.</p><button id="g1WheelTryAgain" type="button">Try Again</button></div>`;$('#g1WheelTryAgain').onclick=()=>{st.hearts=4;st.gameOver=false;saveG2Wheel(st);renderG2WheelScreen();};return;}if(g2WheelPlus){const done=st.plus[g2WheelLevel].length;host.innerHTML=`<div class="g1WheelIdle"><img src="assets/chichi_present.png" alt="Chichi"><div class="g1WheelEyebrow">WHEEL+ MASTER CHALLENGE</div><h2>${name} Wheel</h2><p>Correct answers turn numbered segments green.</p><div class="g1WheelGoal">${done}/15 green</div></div>`;}else{host.innerHTML=`<div class="g1WheelIdle"><img src="assets/chichi_present.png" alt="Chichi"><h2>${name} Wheel</h2><p><b>Normal</b> = 10 pts · <b>Gold</b> = 20 pts + ❤️</p><p>${st.wheelMaster?'All three wheels are complete — Wheel+ is unlocked!':'Finish this wheel to unlock the next one.'}</p></div>`;}}
@@ -1848,7 +2043,12 @@ $('#homeChichi').onclick=()=>route('#weeks');
 
 // Restored original homepage sounds; Halloween-only sound effects are inactive.
 $('#homeRobin').onclick=()=>{try{new Audio('assets/robin_chirp.wav').play()}catch(e){}};
-$('#homeGoblin').onclick=()=>{try{if(!g2HalloweenSong.paused){g2HalloweenSong.pause();g2HalloweenSong.currentTime=0}else{g2HalloweenSong.currentTime=0;g2HalloweenSong.play()}}catch(e){}};
+let g2MusicNoteTimer=null;
+function g2SpawnSongNote(){if(g2HalloweenSong.paused)return;let layer=document.getElementById('g2SongNotes');if(!layer){layer=document.createElement('div');layer.id='g2SongNotes';layer.className='g2SongNoteLayer';document.body.appendChild(layer)}const anchor=document.querySelector('#homeGoblin');const rect=anchor&&anchor.getBoundingClientRect();if(!rect)return;const note=document.createElement('span');note.className='g2FloatingSongNote';note.textContent=['♫','♪','♬'][Math.floor(Math.random()*3)];note.style.left=(rect.left+rect.width*.5+(Math.random()-.5)*rect.width*.6)+'px';note.style.top=(rect.top+rect.height*.35)+'px';note.style.fontSize=(23+Math.random()*21)+'px';note.style.color=['#ef5c4d','#315fb9','#e7a125','#3a986e'][Math.floor(Math.random()*4)];note.style.setProperty('--dx',(Math.random()*120-60)+'px');note.style.setProperty('--duration',(2+Math.random())+'s');layer.appendChild(note);note.addEventListener('animationend',()=>note.remove())}
+function g2StopSongNotes(){if(g2MusicNoteTimer){clearInterval(g2MusicNoteTimer);g2MusicNoteTimer=null}document.getElementById('g2SongNotes')?.replaceChildren()}
+function g2StartSongNotes(){g2StopSongNotes();for(let i=0;i<5;i++)setTimeout(g2SpawnSongNote,i*120);g2MusicNoteTimer=setInterval(g2SpawnSongNote,330)}
+g2HalloweenSong.addEventListener('pause',g2StopSongNotes);g2HalloweenSong.addEventListener('ended',g2StopSongNotes);
+$('#homeGoblin').onclick=()=>{try{if(!g2HalloweenSong.paused){g2HalloweenSong.pause();g2HalloweenSong.currentTime=0}else{g2HalloweenSong.currentTime=0;g2HalloweenSong.play().then(g2StartSongNotes).catch(()=>{})}}catch(e){}};
 $('#homeBell').onclick=()=>{try{new Audio('assets/church_bell.wav').play()}catch(e){}};
 $('#homeContact').onclick=(e)=>{ /* let the mailto link open normally */ };
 window.addEventListener('hashchange',applyRoute);

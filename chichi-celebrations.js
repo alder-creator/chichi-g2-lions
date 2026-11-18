@@ -74,7 +74,7 @@
     img.src=reducedMotion()?'assets/chichi_celebrate_wheel.png':currentImage;
     img.alt='Chichi celebrating';img.draggable=false;
     btn.appendChild(img);
-    const heading=document.createElement('strong');heading.textContent='Wheel complete!';
+    const heading=document.createElement('strong');heading.textContent=options.title||'Wheel complete!';
     card.append(close,btn,heading);overlay.appendChild(card);
     document.body.appendChild(overlay);
     current=overlay;

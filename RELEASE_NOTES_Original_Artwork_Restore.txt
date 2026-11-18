@@ -1,0 +1,11 @@
+Chichi G2 corrected artwork release
+Base: Chichi_G2_Lions_v1.00_Interactive_Review_QC.zip
+Release: Chichi_G2_Lions_v1.01_Restored_Artwork_QC.zip
+Approved source: original Final Exam Prep grayscale image from v76.80/v0.96.
+Colorization performed on original original line-art, retaining exact characters, text and scene geometry; not the AI-generated replacement.
+Coming Soon badge removed. Original wide 1600x450, portrait 1200x400; final image ratios 3.5556 and 3.
+Both previous color_v2 artwork files and original Coming Soon grayscale files were excluded from deployment package.
+Separate final-wheel.html, interactive study guides, original review/mocks, locked weekly activities retained unchanged.
+No real exam questions added. Downloads remain disabled.
+G2 original recorded vocabulary audio retained.
+QC: source diff review, JS parse, ZIP checksum, page visual browser review required before live deployment.

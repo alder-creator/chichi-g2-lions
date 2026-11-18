@@ -1,0 +1,5 @@
+Chichi Final Exam Prep — G2 November 17 2026 REVIEW BUILD
+
+Changes: compact six-card study hub (Vocabulary, Grammar, Reading, Games, Practice Exam, Final Exam Wheel); significantly reduced visual background contrast; improved vocabulary cards with true image or letter fallback and 12-per-page pagination; preserved all 117/120 original entries and pronunciation audio; the six Games Corner links launch the original weekly app activities for Weeks 1–4, not rewritten games; all student-facing “mock” wording changed to Practice Exam; G1 original Final Exam Prep tile dimensions retained; “Coming Soon” badge removed using a small locally retouched sky area, with untouched full-color approved image kept in ZIP as source. Halloween music notes G1 layer visibility restored, G2 song event notes added and hidden on pause/end. Existing native category wheels/Wheel+ retained unchanged. No actual final exam questions added and no PDFs added.
+
+These are review builds, not deployed. Browser smoke tests cover hub navigation, pagination, weekly game launch, and wheel entry. Recording playback and full end-to-end wheel milestone completion have not been audited in this update.

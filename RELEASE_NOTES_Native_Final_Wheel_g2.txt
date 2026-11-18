@@ -1,0 +1,9 @@
+Native Final Wheel update for g2. Uses existing in-app weekly wheel (not a copied wheel page).
+The Final Prep wheel button routes to index.html#finalwheel.
+Original weekly wheel DOM, animation, audio, paint logic, CSS and assets remain authoritative.
+12 independent questions from existing final review bank: 4 each reading, word work, language.
+The original four weekly wheels retain their existing normal mode.
+No artwork generated or replaced. Final Exam Prep tile artwork and dimensions left unchanged from the supplied source ZIP.
+Existing grammar guides, vocabulary and mock preserved; no download feature enabled.
+QC: JavaScript syntax and 12-spin completion tests passed for both modes in Chromium.
+Still needs visual approval and full-site/production regression before deployment.

@@ -4,10 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fffaf0">
-  <meta name="chichi-build" content="G2 Lions v0.96 — Wheel Completion Celebration">
+  <meta name="chichi-build" content="G2 Lions v1.09 — Final Exam Prep Update">
   <title>Chichi's English Town · G2 Lions · myView 1.4 Final Prep</title>
   <link rel="stylesheet" href="styles.css?v=0.96-wheel-completions">
   <link rel="stylesheet" href="chichi-celebrations.css?v=0.96">
+
+<style>
+.prepGameBack{display:block;width:max-content;max-width:100%;box-sizing:border-box;margin:8px auto 12px;padding:10px 14px;min-height:44px;border:2px solid #a27a48;border-radius:12px;background:#fff3ce;color:#17486b;font:800 15px/1.25 system-ui;text-align:center;text-decoration:none}
+.prepGameBack:focus-visible{outline:3px solid #17486b;outline-offset:2px}
+.activityHeader:has(.prepGameBack){flex-direction:column}
+.activityHeader:has(.prepGameBack) .activityTitle{padding:0 12px;margin-top:0}
+@media(max-width:700px){.activityHeader:has(.prepGameBack){padding-top:82px}.activityHeader:has(.prepGameBack)+.activityPanel{margin-top:0}}
+</style>
+
+<style id="prep-return-emphasis">
+body .prepGameBack{position:fixed!important;inset:12px auto auto 50%!important;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:12px;width:max-content;max-width:calc(100vw - 24px);min-height:56px;box-sizing:border-box;margin:0!important;padding:12px 20px;border:3px solid #f3c65d;border-radius:15px;background:#123e68;color:#fff;font:900 clamp(15px,2vw,21px)/1.2 system-ui;text-align:center;text-decoration:none;box-shadow:0 5px 0 #082944,0 8px 20px #102e4a55;z-index:1000!important}
+.prepGameBack::before{content:"←";font:900 32px/1 system-ui;flex-shrink:0}
+.prepGameBack:hover{background:#1b5385}
+.prepGameBack:focus-visible{outline:4px solid white;outline-offset:3px;box-shadow:0 0 0 8px #123e68}
+body:has(.prepGameBack) .app,body:has(.prepGameBack) #app{padding-top:88px!important;box-sizing:border-box}
+@media(min-width:901px),(orientation:landscape){
+body.activityMode :is(#cards,#listen,#match,#phonics,#readfind,#order).active:has(.prepGameBack){height:calc(100dvh - 88px)!important;min-height:calc(100dvh - 88px)!important}
+}
+@media(max-width:380px){body .prepGameBack{gap:8px;padding:10px 12px}}
+</style>
 </head>
 <body>
   <button id="globalHome" class="globalHome" aria-label="Home"><img src="assets/chichi_title_logo.png" alt="Chichi's English Town"></button>
@@ -40,6 +60,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="chichi-celebrations.js?v=0.96"></script>
-  <script src="app.js?v=0.96-wheel-completions"></script>
+  <script src="app.js?v=1.08-final-prep"></script>
 </body>
 </html>

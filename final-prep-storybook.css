@@ -1,0 +1,249 @@
+
+/* Final Exam Prep takes its visual language from the actual Chichi Week 1 assets. */
+:root{--ink:#173d69;--green:#1a654e;--cream:#fff6df;--gold:#f7ca5d;--line:#c8944c}
+*{box-sizing:border-box}
+html{min-height:100%;background:#85c8f9}
+body{
+ min-height:100vh;
+ background:linear-gradient(rgba(121,196,255,.12),rgba(121,196,255,.08)),
+ url('assets/ui/wheel_v7440/storybook_background_clean.png') center center/cover fixed no-repeat!important;
+ color:#183957!important;
+ font-family:"Trebuchet MS","Segoe UI",sans-serif!important;
+ font-size:18px!important;
+}
+.wrap{width:min(1500px,100%);max-width:1500px!important;padding:20px clamp(12px,2.5vw,32px) 80px!important}
+.top{min-height:108px;display:flex;align-items:center;justify-content:space-between;gap:24px!important}
+.prep-brand{display:block;width:clamp(145px,17vw,245px);height:clamp(70px,9vw,115px);object-fit:contain}
+.top .back,.prep-return{
+ color:#163e68!important;background:#fff6dd!important;
+ border:4px solid #161b1d!important;border-radius:27px 22px 27px 24px!important;
+ box-shadow:0 4px 0 #26354525;
+ font-family:"Segoe Print","Comic Sans MS","Trebuchet MS",cursive!important;
+ font-weight:950!important;font-size:clamp(16px,1.7vw,22px)!important;
+ text-decoration:none!important;padding:13px 20px!important;
+ cursor:pointer;
+}
+.top .back:hover,.prep-return:hover{background:#ffe7ae!important}
+.banner{
+ position:relative;isolation:isolate;
+ border:0!important;box-shadow:none!important;
+ border-radius:0!important;color:#133d6c!important;
+ background:url('assets/panels/torn_paper_panel.png') center/100% 100% no-repeat!important;
+ min-height:195px;
+ margin:3px auto 0!important;padding:38px clamp(32px,6vw,100px)!important;
+ display:flex;align-items:center;gap:18px;
+}
+.banner::before{content:"";position:absolute;inset:12% 5%;z-index:-1;border-radius:34px;background:#fff4cc80;pointer-events:none}
+.banner h1{
+ color:#163d69!important;font:1000 clamp(38px,5vw,72px)/1.12 "Segoe Print","Comic Sans MS","Trebuchet MS",cursive!important;
+ letter-spacing:-.03em;margin:0!important;
+ text-shadow:1px 2px #fff8de;
+}
+.banner p{font-size:clamp(17px,2vw,25px)!important;font-weight:850;margin:5px 0!important;color:#856329}
+.prep-hero-mascot{width:130px;height:130px;object-fit:contain;margin-left:auto;flex-shrink:0}
+.sub{display:none!important}
+.prep-extras-nav{
+ display:grid!important;
+ width:min(1220px,100%);margin:0 auto!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ background:url('assets/panels/torn_paper_panel.png') center/100% 100% no-repeat;
+ gap:clamp(14px,2vw,28px)!important;
+ padding:clamp(32px,5vw,80px) clamp(26px,5vw,70px) clamp(40px,5vw,80px)!important;
+}
+.prep-extras-nav[hidden]{display:none!important}
+.prep-art-card{
+ height:clamp(175px,20vw,245px)!important;
+ display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+ min-width:0;min-height:0!important;
+ border:0!important;border-radius:22px!important;
+ overflow:hidden;position:relative;
+ background:
+ radial-gradient(circle at 24% 80%,#fff7d36b 0 14%,transparent 45%),
+ linear-gradient(130deg,#ffd9c0,#ffd2dc 42%,#fff3bb)!important;
+ box-shadow:0 5px 0 #724f2c3d,inset 0 0 0 5px #fff6dc88;
+ padding:13px 9px 8px!important;
+ cursor:pointer;
+ transition:transform .18s,filter .18s;
+}
+.prep-art-card:nth-child(2){background:linear-gradient(125deg,#bdebf2,#8bd7ee 55%,#f7edac)!important}
+.prep-art-card:nth-child(3){background:linear-gradient(125deg,#bce9a9,#d7f2be 60%,#ffe8c1)!important}
+.prep-art-card:nth-child(4){background:linear-gradient(125deg,#dfd0ff,#d7c2f5 55%,#ffe2bb)!important}
+.prep-art-card:nth-child(5){background:linear-gradient(125deg,#ffe7a4,#ffd2af 55%,#fff0cd)!important}
+.prep-art-card:where(:hover,:focus-visible){transform:translateY(-4px);filter:saturate(1.1);outline:4px solid #f5c245!important;outline-offset:3px}
+.prep-art-card .prep-art-caption{
+ color:#143a69;font:1000 clamp(20px,2.1vw,31px)/1.1 "Segoe Print","Comic Sans MS","Trebuchet MS",cursive;
+ text-align:center;text-shadow:1px 2px #fff8e8,1px -1px #fff8e8;
+ position:relative;z-index:2;
+}
+.prep-art-card img{
+ display:block;object-fit:contain;object-position:center;
+ width:100%;height:calc(100% - 48px);min-height:65px;
+ filter:drop-shadow(0 4px 2px #34492325);
+}
+.prep-art-card.wheel img{width:66%;height:calc(100% - 48px)}
+.prep-art-open{position:absolute;bottom:8px;right:9px;background:#fff7dfe8;color:#845521;border-radius:15px;padding:2px 9px;font:bold 12px "Trebuchet MS",sans-serif;z-index:2}
+.prep-return{display:block;width:fit-content;margin:10px auto 15px;font-size:17px!important}
+.prep-return[hidden]{display:none!important}
+.tabs{max-width:1100px;margin:15px auto 18px!important}
+.tab,.week-tabs button{
+ border:3px solid #8c6b34!important;background:#fff4d7!important;
+ border-radius:19px!important;font:900 clamp(14px,1.8vw,23px)/1.2 "Trebuchet MS",sans-serif!important;
+ color:#183d69!important;
+ box-shadow:0 3px 0 #5a3d1233;
+}
+.tab[aria-selected=true]{background:#f9cf5a!important;border-color:#9b641c!important}
+#work.card,.lesson-slide,.word-card,.guide-intro,.guide-finished,.lesson-quiz{
+ background:#fff9ea!important;
+ border:4px solid #a9783d!important;
+ border-radius:25px!important;
+ box-shadow:0 6px 0 #6b4b2c30, 0 15px 30px #18352d26!important;
+}
+#work.card{max-width:1100px;margin:0 auto;padding:clamp(18px,4vw,40px)!important}
+#work .passage{background:#fff3cd!important;border-left:6px solid #e9a43d}
+#work .choice,.lesson-choices button{background:#fffdf5!important;border:3px solid #b8c5b0!important;color:#163f65!important}
+#work .choice.correct,.lesson-choices button.correct{background:#d8f6d4!important;border-color:#3b985d!important}
+#work .choice.wrong,.lesson-choices button.incorrect{background:#ffe5de!important;border-color:#d66b56!important}
+#work .question{font-size:clamp(22px,2.7vw,32px)!important}
+#prep-extra{max-width:1100px;margin:0 auto}
+.guide-intro{display:flex;align-items:center;gap:20px;border:0!important;background:#fff3ce!important;padding:25px!important}
+.guide-intro h2{font:950 clamp(28px,3.2vw,43px)/1.12 "Segoe Print","Comic Sans MS","Trebuchet MS",cursive!important;color:#143c69}
+.guide-intro p{font-size:20px}
+.lesson-slide{padding:clamp(18px,4vw,36px)!important}
+.lesson-slide h2{color:#17436b!important;font-family:"Segoe Print","Comic Sans MS",cursive!important}
+.lesson-diagram{background:#fff2b4!important}
+.lesson-memory{background:#dcf3d3!important}
+.lesson-example{background:#f0e5ff!important}
+.lesson-quiz{background:#e8f6ff!important;border:2px solid #b6d7ee!important;box-shadow:none!important}
+.lesson-dot{border:3px solid #a97535!important;background:#fff4cf!important;color:#19456b!important}
+.lesson-dot.checked{background:#b9ebaa!important}
+.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:17px!important}
+.word-card{padding:14px!important;grid-template-columns:100px minmax(0,1fr) auto!important;border-width:3px!important}
+.word-picture{width:100px;height:100px;overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.word-picture img{width:100%;height:100%;object-fit:contain!important;border:0!important;background:transparent!important}
+.word-card h3{font-family:"Segoe Print","Comic Sans MS","Trebuchet MS",cursive!important;font-size:25px!important}
+.sound-word{border:3px solid #b17d3d!important;background:#ffe6a4!important;border-radius:16px!important;min-width:48px;min-height:48px}
+.vocab-toolbar,.week-tabs{flex-wrap:wrap;gap:8px}
+@media(max-width:850px){
+ .prep-extras-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;background-size:100% 100%;padding:40px 28px 50px!important}
+ .banner{padding:20px 25px!important;min-height:160px}.banner h1{font-size:clamp(32px,6vw,50px)!important}
+ .prep-hero-mascot{width:95px;height:95px}
+ .prep-art-card{height:195px!important}
+ .vocab-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){
+ body{background-attachment:scroll!important}
+ .wrap{padding:12px 10px 50px!important}
+ .top{min-height:65px;gap:8px!important}.prep-brand{width:134px;height:60px}
+ .top .back{font-size:13px!important;padding:9px 11px!important;border-width:3px!important}
+ .banner{min-height:125px;padding:18px 20px!important;background-size:100% 100%!important}
+ .banner h1{font-size:31px!important}.banner p{font-size:14px!important}
+ .prep-hero-mascot{width:62px;height:70px}
+ .prep-extras-nav{padding:30px 22px 38px!important;gap:12px!important}
+ .prep-art-card{height:160px!important;padding:11px 7px!important;border-radius:16px!important}
+ .prep-art-card .prep-art-caption{font-size:17px!important}
+ .prep-art-card img{height:calc(100% - 37px)}
+ .prep-art-open{font-size:10px;padding:2px 5px}
+ .tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .tab{font-size:15px!important}
+ .word-card{grid-template-columns:75px minmax(0,1fr) 43px!important;gap:7px!important}
+ .word-picture{width:75px;height:80px}
+ .word-card h3{font-size:20px!important}
+ .word-card .korean{font-size:16px}
+ .guide-intro{padding:14px!important;display:block}
+ .lesson-slide{padding:16px!important}
+ .lesson-actions button{font-size:16px!important}
+ .lesson-diagram{font-size:22px!important}
+}
+@media(prefers-reduced-motion:reduce){.prep-art-card{transition:none!important}}
+
+@media(min-width:851px){
+ .prep-extras-nav{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ .prep-art-card{grid-column:span 2}
+ .prep-art-card:nth-child(4){grid-column:2 / span 2}
+ .prep-art-card:nth-child(5){grid-column:4 / span 2}
+}
+@media(max-width:520px){
+ .prep-art-card:nth-child(5){grid-column:1 / -1;width:calc(50% - 6px);justify-self:center;min-width:155px}
+}
+
+
+/* v76.88/v1.04 tidy prep details */
+.banner p{font-size:clamp(17px,1.8vw,24px)!important}
+.vocab-shell{display:flex;flex-direction:column;gap:18px}
+.vocab-hero{
+  background:#fff1c9;border:4px solid #a9783d;border-radius:28px;
+  padding:20px 28px;box-shadow:0 5px 0 #6b4b2c25;
+}
+.vocab-hero h2{
+  margin:0;color:#143c69!important;
+  font:1000 clamp(30px,4vw,58px)/1 "Segoe Print","Comic Sans MS",cursive!important;
+}
+.vocab-hero p{margin:6px 0 0;font-size:clamp(18px,1.9vw,30px);color:#173d69}
+.vocab-toolbar-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.vocab-summary{font:900 18px/1.2 "Trebuchet MS",sans-serif;color:#173d69}
+.word-info{min-width:0}
+.word-info h3{margin:0 0 4px}
+.korean{margin:0;color:#745324;font-weight:900;font-size:18px}
+@media(max-width:700px){
+ .vocab-hero{padding:16px 18px}
+ .vocab-hero p{font-size:18px}
+ .vocab-toolbar-row{gap:10px}
+ .vocab-summary{font-size:16px}
+}
+
+/* Nov 17: restrained learning surfaces; existing Chichi graphics unchanged. */
+body{background-color:#a9d4eb!important;background-image:linear-gradient(rgba(227,244,253,.72),rgba(234,247,253,.79)),url('assets/ui/wheel_v7440/storybook_background_clean.png')!important;background-attachment:fixed!important}
+.wrap{max-width:1240px!important;padding:12px 22px 35px!important}
+.top{min-height:72px!important}.prep-brand{max-height:75px!important;width:185px!important}.top .back{padding:7px 15px!important;font-size:17px!important}
+.banner{min-height:112px!important;padding:18px 38px!important;margin:0 auto 6px!important}
+.banner h1{font-size:clamp(32px,4vw,48px)!important}.banner p{font-size:16px!important;margin:0!important}
+.prep-hero-mascot{width:85px!important;height:82px!important}
+.prep-extras-nav{width:min(1120px,100%)!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;padding:23px 32px!important;background:#fff5dbec!important;border:5px solid #cba767!important;border-radius:26px!important;box-shadow:0 8px 24px #36628225!important}
+.prep-art-card,.prep-art-card:nth-child(4),.prep-art-card:nth-child(5){grid-column:auto!important;width:100%!important;min-width:0!important;height:clamp(138px,14vw,168px)!important;padding:8px!important;border-radius:18px!important}
+.prep-art-card .prep-art-caption{font-size:clamp(16px,1.6vw,23px)!important;line-height:1.08!important}
+.prep-art-card img{height:calc(100% - 34px)!important;max-width:100%!important}
+.prep-art-card .prep-art-open{font-size:10px!important}
+.prep-return{margin:5px auto 10px!important;padding:8px 16px!important;font-size:16px!important}
+#prep-extra{width:min(1100px,100%);margin:0 auto!important}
+.vocab-hero{padding:11px 20px!important;border-width:3px!important;background:#fffae9f5!important}
+.vocab-hero h2{font-size:clamp(25px,3vw,36px)!important}
+.vocab-hero p{font-size:16px!important;margin-top:4px!important}
+.vocab-shell{gap:10px!important;padding:2px 4px!important}
+.vocab-toolbar-row{position:sticky;top:0;z-index:10;align-items:center!important;gap:8px!important;background:#fff9ebf5;border:2px solid #ddc69a;border-radius:17px;padding:9px 12px;box-shadow:0 3px 9px #193e5830}
+.vocab-toolbar-row .week-tabs{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+.vocab-toolbar-row .week-tabs button{min-height:38px!important;padding:6px 10px!important;font-size:15px!important;border-width:2px!important}
+.vocab-summary{font-size:14px!important;margin:0!important;color:#475d69!important}
+.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+.word-card{display:grid!important;grid-template-columns:78px minmax(0,1fr) 46px!important;gap:12px!important;align-items:center!important;min-width:0!important;min-height:102px!important;padding:9px 12px!important;background:#fffaf0f5!important;border:2px solid #bb945e!important;border-radius:18px!important;box-shadow:none!important}
+.word-card .word-picture{width:78px!important;height:78px!important;display:flex!important;align-items:center;justify-content:center;overflow:hidden!important;min-width:0!important;position:static!important}
+.word-card .word-picture img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;position:static!important;border:0!important;background:transparent!important}
+.word-card .word-picture.missing-picture{background:#ecf5ef!important;border-radius:14px!important}
+.word-card .word-picture .word-abc{font:900 20px/1 'Trebuchet MS',sans-serif;color:#3d6b66}
+.word-info{min-width:0!important;overflow:hidden!important}
+.word-info h3{display:block!important;margin:0 0 4px!important;color:#17486b!important;font:900 clamp(18px,1.6vw,23px)/1.15 'Segoe Print','Trebuchet MS',sans-serif!important;overflow-wrap:anywhere!important}
+.word-info .korean{display:block!important;position:static!important;margin:0!important;color:#704f24!important;font:800 16px/1.25 'Trebuchet MS',sans-serif!important;overflow-wrap:anywhere!important}
+.sound-word{min-width:42px!important;width:42px!important;height:44px!important;min-height:44px!important;padding:4px!important;font-size:20px!important;justify-self:end!important}
+.vocab-pages{display:flex;align-items:center;justify-content:center;gap:12px;margin:5px auto;padding:4px 8px}
+.vocab-pages button{border:2px solid #aa8554;border-radius:12px;background:#fff1c8;color:#1b4565;padding:8px 14px;font-weight:850;cursor:pointer}
+.vocab-pages button:disabled{opacity:.4;cursor:default}
+.vocab-pages span{font-weight:850;font-size:14px;color:#265372}
+.game-intro{border:3px solid #bb955a;background:#fff9e8;border-radius:18px;padding:13px 18px;line-height:1.35}
+.game-intro h2{margin:0;color:#173d69;font:900 29px 'Segoe Print','Trebuchet MS',sans-serif}
+.game-intro p{margin:5px 0 0;font-size:16px}
+.game-week-select{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:13px auto}
+.game-week-select button{background:#fff4ce;border:3px solid #b28c51;border-radius:15px;color:#184669;padding:10px 17px;cursor:pointer;font-size:19px;font-weight:900}
+.game-week-select button.selected{background:#f3d475;border-color:#6f5c35}
+.game-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:4px 0}
+.game-list a{display:flex;align-items:center;justify-content:center;min-height:100px;padding:13px;background:#fffaf1;border:3px solid #bb915d;border-radius:18px;color:#194a72;text-decoration:none;text-align:center;font:900 19px/1.2 'Trebuchet MS',sans-serif;box-shadow:0 4px 0 #b28e5c44}
+.game-list a:hover,.game-list a:focus-visible{outline:3px solid #f6bd46;background:#fff1c6}
+@media(max-width:800px){.wrap{padding:10px 10px 30px!important}.banner{padding:10px 20px!important;min-height:106px!important}.prep-extras-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:17px 14px!important}.prep-art-card,.prep-art-card:nth-child(4),.prep-art-card:nth-child(5){height:155px!important}.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.vocab-toolbar-row{position:static;display:flex;flex-direction:column;align-items:stretch!important}.game-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){body{background-attachment:scroll!important}.top{min-height:58px!important}.prep-brand{width:125px!important;height:55px!important}.banner{min-height:85px!important}.banner h1{font-size:27px!important}.banner p{font-size:13px!important}.prep-hero-mascot{height:62px!important;width:60px!important}.prep-art-card,.prep-art-card:nth-child(4),.prep-art-card:nth-child(5){height:138px!important}.prep-art-card .prep-art-caption{font-size:15px!important}.vocab-grid{grid-template-columns:1fr!important}.word-card{grid-template-columns:70px minmax(0,1fr) 42px!important;min-height:89px!important}.word-card .word-picture{width:70px!important;height:70px!important}.game-list{grid-template-columns:1fr 1fr;gap:8px}.game-list a{min-height:88px;font-size:16px}}
+
+.study-control{background:#fff1c8;border:2px solid #aa8554;border-radius:10px;color:#1b4565;font:800 15px/1.2 system-ui;padding:8px 12px;min-height:44px;cursor:pointer}
+.study-control:focus-visible{outline:3px solid #21556f;outline-offset:2px}
+.word-info h3[hidden]{display:none!important}
+.word-info .study-control{margin-top:5px;padding-inline:8px;font-size:14px}
+#v-reveal-all{margin-left:auto}
+.lesson-choices{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lesson-choices button{overflow-wrap:anywhere}
+@media(max-width:600px){.lesson-choices{grid-template-columns:1fr}}
